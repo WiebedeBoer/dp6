@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "VOUVdhhS33+UTnq6KtnA5ZL0ZTXdjEElFeXTygEz1SypCZc+5AWzK2ymKrmkZCngu+uaoe1MFdxrfdHARSmi/g==",
+  "dgSpecHash": "KOYxN8G3r7r3f68MZJp/duuUqAEpdvbqQ8t/z9+5R/4/DZvkO1iRRbOhQ9rQYMA5e13qCNXT6a+eNuVTaPb30w==",
   "success": true,
-  "projectFilePath": "C:\\Users\\wiebe\\Documents\\patterns\\dp2\\tekenprogramma\\tekenprogramma.csproj",
+  "projectFilePath": "C:\\Users\\wiebe\\Documents\\patterns\\dp6\\tekenprogramma\\tekenprogramma.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\wiebe\\.nuget\\packages\\microsoft.net.native.compiler\\2.2.1\\microsoft.net.native.compiler.2.2.1.nupkg.sha512",
     "C:\\Users\\wiebe\\.nuget\\packages\\microsoft.net.uwpcoreruntimesdk\\2.2.3\\microsoft.net.uwpcoreruntimesdk.2.2.3.nupkg.sha512",

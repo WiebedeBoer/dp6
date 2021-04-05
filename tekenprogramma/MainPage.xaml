@@ -17,8 +17,8 @@
         <Canvas HorizontalAlignment="Left" VerticalAlignment="top" Margin="0,0,0,0" Height="360" Width="1280" Name="front_canvas" PointerMoved="Front_canvas_PointerMoved" Background="#FFFFFFFF">
             <Button FontSize="25px" Content="Undo" Canvas.Left="0" Canvas.Top="0" Width="305" Height="100" Click="Undo_Click" Name="Undo"/>
             <Button FontSize="25px" Content="Redo" Canvas.Left="325" Canvas.Top="0" Width="305" Height="100" Click="Redo_Click" Name="Redo"/>
-            <TextBox FontSize="25px" Canvas.Left="650" Canvas.Top="0" Width="305" Height="100" TextWrapping="Wrap" Text="Width" Name="Width" TextChanged="Width_TextChanged"/>
-            <TextBox FontSize="25px" Canvas.Left="975" Canvas.Top="0" Width="305" Height="100" TextWrapping="Wrap" Text="Height" Name="Height" TextChanged="Height_TextChanged" />
+            <TextBox FontSize="25px" Canvas.Left="650" Canvas.Top="0" Width="305" Height="100" TextWrapping="Wrap" Text="Ornament" Name="Width" TextChanged="Width_TextChanged"/>
+            <TextBox FontSize="25px" Canvas.Left="975" Canvas.Top="0" Width="305" Height="100" TextWrapping="Wrap" Text="Top" Name="Height" TextChanged="Height_TextChanged" />
            <!--second row-->
             <Button FontSize="25px" Content="Save" Canvas.Left="0" Canvas.Top="130" Width="305" Height="100" Click="Save_Click" Name="Save"/>
             <Button FontSize="25px" Content="Load" Canvas.Left="325" Canvas.Top="130" Width="305" Height="100" Click="Load_Click" Name="Load"/>

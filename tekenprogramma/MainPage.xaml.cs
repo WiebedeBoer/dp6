@@ -18,6 +18,9 @@ namespace tekenprogramma
         Rectangle backuprectangle;
         Ellipse backupellipse;
 
+        string ornamentName = "";
+        string ornamentLoc = "";
+
         public MainPage()
         {
             InitializeComponent();
@@ -207,12 +210,12 @@ namespace tekenprogramma
 
         private void Width_TextChanged(object sender, TextChangedEventArgs e)
         {
-
+            this.ornamentName = Width.Text;
         }
         
         private void Height_TextChanged(object sender, TextChangedEventArgs e)
         {
-
+            this.ornamentLoc = Height.Text;
         }
     }
 }
