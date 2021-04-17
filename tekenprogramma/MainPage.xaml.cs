@@ -21,6 +21,8 @@ namespace tekenprogramma
         string ornamentName = "";
         string ornamentLoc = "";
 
+        FrameworkElement selectedElement;
+
         public MainPage()
         {
             InitializeComponent();
@@ -167,6 +169,12 @@ namespace tekenprogramma
         {
             FrameworkElement button = e.OriginalSource as FrameworkElement;
             type = button.Name;
+
+            
+
+            //create decorator
+            OrnamentDecorator ornament = new OrnamentDecorator();
+            ornament.Draw(selectedElement, this.ornamentName, this.ornamentLoc);
         }
 
         //group
