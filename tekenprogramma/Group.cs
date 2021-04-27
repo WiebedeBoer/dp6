@@ -27,6 +27,9 @@ namespace tekenprogramma
 
         public List<Group> addedGroups = new List<Group>();
 
+        public TextBlock ornament = new TextBlock();
+        public string ornamentPosition = null;
+
         public Group(double height, double width, double x, double y, string type, int id)
         {
             this.height = height;

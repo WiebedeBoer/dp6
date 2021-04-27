@@ -73,51 +73,64 @@ namespace tekenprogramma
                 {
                     Canvas.SetLeft(lab, groupright - groupleft);
                     Canvas.SetTop(lab, grouptop - 25);
+                    lastgroup.ornamentPosition = "top";
                 }
                 else if (position == "bottom")
                 {
                     Canvas.SetLeft(lab, groupright - groupleft);
                     Canvas.SetTop(lab, grouptop + groupheight + 25);
+                    lastgroup.ornamentPosition = "bottom";
                 }
                 else if (position == "left")
                 {
                     Canvas.SetLeft(lab, groupleft - 25);
                     Canvas.SetTop(lab, groupbottom - grouptop);
+                    lastgroup.ornamentPosition = "left";
                 }
                 else if (position == "right")
                 {
                     Canvas.SetLeft(lab, groupleft + groupwidth + 25);
                     Canvas.SetTop(lab, groupbottom - grouptop);
+                    lastgroup.ornamentPosition = "right";
                 }
                 //add to canvas
+                lab.AccessKey = Convert.ToString(lastgroup.id);
                 Canvas parent = (Canvas)element.Parent;
                 parent.Children.Add(lab);
+
+                lastgroup.ornament = lab;
 
             }
             //else ornament add to element
             else
             {
+                string ornamentPosition;
                 if (position == "top")
                 {
                     Canvas.SetLeft(lab, element.ActualOffset.X);
                     Canvas.SetTop(lab, element.ActualOffset.Y - 25);
+                    ornamentPosition = "top";
                 }
                 else if (position == "bottom")
                 {
                     Canvas.SetLeft(lab, element.ActualOffset.X);
                     Canvas.SetTop(lab, element.ActualOffset.Y + element.Height + 25);
+                    ornamentPosition = "bottom";
                 }
                 else if (position == "left")
                 {
                     Canvas.SetLeft(lab, element.ActualOffset.X - 25);
                     Canvas.SetTop(lab, element.ActualOffset.Y);
+                    ornamentPosition = "left";
                 }
                 else if (position == "right")
                 {
                     Canvas.SetLeft(lab, element.ActualOffset.X + element.Width + 25);
                     Canvas.SetTop(lab, element.ActualOffset.Y);
+                    ornamentPosition = "right";
                 }
                 //add to canvas
+                lab.AccessKey = Convert.ToString(element.AccessKey);
                 Canvas parent = (Canvas)element.Parent;
                 parent.Children.Add(lab);
             }
