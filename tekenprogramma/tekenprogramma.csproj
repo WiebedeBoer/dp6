@@ -122,6 +122,7 @@
     <Compile Include="Commands.cs" />
     <Compile Include="Composite.cs" />
     <Compile Include="Decorator.cs" />
+    <Compile Include="Invoker.cs" />
     <Compile Include="Receiver.cs" />
     <Compile Include="Shapes.cs" />
     <Compile Include="Group.cs" />

@@ -1,9 +1,14 @@
 ﻿using System;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Shapes;
+using Windows.UI.Input;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+using System.IO;
+using System.Text.RegularExpressions;
 namespace tekenprogramma
 {
     class Group
@@ -15,6 +20,12 @@ namespace tekenprogramma
         public string type;
         public int id;
         public List<Group> groupitems;
+
+        public List<FrameworkElement> drawnElements = new List<FrameworkElement>();
+        public List<FrameworkElement> removedElements = new List<FrameworkElement>();
+        public List<FrameworkElement> movedElements = new List<FrameworkElement>();
+
+        public List<Group> addedGroups = new List<Group>();
 
         public Group(double height, double width, double x, double y, string type, int id)
         {
