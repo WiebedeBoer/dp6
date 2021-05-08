@@ -5,6 +5,12 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Shapes;
 using Windows.UI.Input;
+using System.Collections.Generic;
+using System.Linq;
+using System.Windows;
+//using System.Windows.Controls;
+using System.IO;
+using System.Text.RegularExpressions;
 
 namespace tekenprogramma
 {
@@ -18,10 +24,13 @@ namespace tekenprogramma
         Rectangle backuprectangle;
         Ellipse backupellipse;
 
+        public Invoker invoker = new Invoker();
+        public List<Shape> selectedShapesList = new List<Shape>();
+        public List<FrameworkElement> selectedElements = new List<FrameworkElement>(); //selected elements list
+        public FrameworkElement selectedElement; //selected element
+
         string ornamentName = "";
         string ornamentLoc = "";
-
-        FrameworkElement selectedElement;
 
         public MainPage()
         {
@@ -174,7 +183,7 @@ namespace tekenprogramma
 
             //create decorator
             OrnamentDecorator ornament = new OrnamentDecorator();
-            ornament.Draw(selectedElement, this.ornamentName, this.ornamentLoc);
+            ornament.Draw(selectedElement, this.ornamentName, this.ornamentLoc, invoker);
         }
 
         //group

@@ -212,7 +212,21 @@ public class Decorator
 
         }
 
-        public void setOrnament()
+        public void Undraw(Invoker invoker, Canvas paintSurface)
+        {
+            TextBlock lastlab = invoker.drawnOrnaments.Last();
+            invoker.removedOrnaments.Add(lastlab);
+            invoker.drawnOrnaments.RemoveAt(invoker.drawnOrnaments.Count() -1);
+        }
+
+        public void Redraw(Invoker invoker, Canvas paintSurface)
+        {
+            TextBlock lastlab = invoker.removedOrnaments.Last();
+            invoker.drawnOrnaments.Add(lastlab);
+            invoker.removedOrnaments.RemoveAt(invoker.removedOrnaments.Count() - 1);
+        }
+
+        public void SetOrnament()
         {
 
         }

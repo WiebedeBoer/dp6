@@ -20,58 +20,6 @@ namespace tekenprogramma
         void Redo();
     }
 
-    //class invoker
-    public class Invoker
-    {
-        public List<ICommand> actionsList = new List<ICommand>();
-        public List<ICommand> redoList = new List<ICommand>();
-
-        public Invoker()
-        {
-            this.actionsList = new List<ICommand>();
-            this.redoList = new List<ICommand>();
-
-        }
-
-        //execute
-        public void Execute(ICommand cmd)
-        {
-            actionsList.Add(cmd);
-            redoList.Clear();
-            cmd.Execute();
-        }
-
-        //undo
-        public void Undo()
-        {
-            if (actionsList.Count >= 1)
-            {
-                ICommand cmd = actionsList.Last();
-                actionsList.RemoveAt(actionsList.Count - 1);
-                redoList.Add(cmd);
-                cmd.Undo();
-            }
-        }
-
-        //redo
-        public void Redo()
-        {
-            if (redoList.Count >= 1)
-            {
-                ICommand cmd = redoList.Last();
-                actionsList.Add(cmd);
-                redoList.RemoveAt(redoList.Count - 1);
-                cmd.Redo();
-                //repaint actions
-                //foreach (ICommand icmd in actionsList)
-                //{
-                //    icmd.Execute();
-                //}
-
-            }
-        }
-    }
-
     //class make rectangle
     public class MakeRectangles : ICommand
     {
@@ -88,17 +36,17 @@ namespace tekenprogramma
 
         public void Execute()
         {
-            this.shape.makeRectangle(this.invoker, this.paintSurface);
+            this.shape.MakeRectangle(this.invoker, this.paintSurface);
         }
 
         public void Undo()
         {
-            this.shape.remove(this.invoker, this.paintSurface);
+            this.shape.Remove(this.invoker, this.paintSurface);
         }
 
         public void Redo()
         {
-            this.shape.makeRectangle(this.invoker, this.paintSurface);
+            this.shape.Add(this.invoker, this.paintSurface);
         }
     }
 
@@ -118,34 +66,32 @@ namespace tekenprogramma
 
         public void Execute()
         {
-            this.shape.makeEllipse(this.invoker, this.paintSurface);
+            this.shape.MakeEllipse(this.invoker, this.paintSurface);
         }
 
         public void Undo()
         {
-            this.shape.remove(this.invoker, this.paintSurface);
+            this.shape.Remove(this.invoker, this.paintSurface);
         }
 
         public void Redo()
         {
-            this.shape.makeEllipse(this.invoker, this.paintSurface);
+            this.shape.Add(this.invoker, this.paintSurface);
         }
     }
 
     //class moving
     public class Moving : ICommand
     {
-
-        private PointerRoutedEventArgs e;
         private Shape shape;
         private Invoker invoker;
         private Canvas paintSurface;
         private FrameworkElement element;
         private Location location;
 
-        public Moving(Shape shape, PointerRoutedEventArgs e, Canvas paintSurface, Invoker invoker, FrameworkElement element, Location location)
+        public Moving(Shape shape, Invoker invoker, Location location, Canvas paintSurface, FrameworkElement element)
         {
-            this.e = e;
+
             this.shape = shape;
             this.invoker = invoker;
             this.paintSurface = paintSurface;
@@ -155,67 +101,53 @@ namespace tekenprogramma
 
         public void Execute()
         {
-            this.shape.moving(this.invoker, this.e, this.element, this.paintSurface, this.location);
+            this.shape.Moving(this.invoker, this.paintSurface, this.location, this.element);
         }
 
         public void Undo()
         {
-            //this.shape.undoMoving(this.invoker, this.paintSurface, this.location);
-            this.shape.undoMoving(this.invoker, this.paintSurface);
-            //this.shape.remove(this.invoker, this.paintSurface);
-            //this.shape.undoMoving();
-            //this.shape.remove(this.invoker, this.paintSurface);
+            this.shape.MoveBack(this.invoker, this.paintSurface);
         }
 
         public void Redo()
         {
-            //this.shape.redoMoving(this.paintSurface);
-            //this.shape.moving(this.e, this.element, this.paintSurface, this.location);
-            //this.shape.redoMoving(this.e, this.element, this.paintSurface);
-            //this.shape.redoMoving();
-            this.shape.redoMoving(this.invoker, this.paintSurface);
-            //this.shape.moving(this.invoker, this.e, this.element, this.paintSurface, this.location);
+            this.shape.MoveAgain(this.invoker, this.paintSurface);
         }
     }
 
     //class resize
     public class Resize : ICommand
     {
-
-        private PointerRoutedEventArgs e;
         private Shape shape;
         private Invoker invoker;
         private Canvas paintSurface;
         private FrameworkElement element;
         private Location location;
+        private PointerRoutedEventArgs e;
 
-        public Resize(Shape shape, PointerRoutedEventArgs e, Canvas paintSurface, Invoker invoker, FrameworkElement element, Location location)
+        public Resize(Shape shape, Invoker invoker, PointerRoutedEventArgs e, Location location, Canvas paintSurface, FrameworkElement element)
         {
-
-            this.e = e;
             this.shape = shape;
             this.invoker = invoker;
             this.paintSurface = paintSurface;
             this.element = element;
             this.location = location;
+            this.e = e;
         }
 
         public void Execute()
         {
-            this.shape.resize(this.invoker, this.e, this.element, this.paintSurface, this.location);
+            this.shape.Resize(this.invoker, this.e, this.paintSurface, this.element);
         }
 
         public void Undo()
         {
-            //this.shape.remove(this.invoker, this.paintSurface);
-            //this.shape.remove(this.invoker, this.paintSurface);
-            this.shape.undoResize(this.invoker, this.paintSurface);
+            this.shape.MoveBack(this.invoker, this.paintSurface);
         }
 
         public void Redo()
         {
-            this.shape.redoResize(this.invoker, this.paintSurface);
-            //this.shape.resize(this.invoker, this.e,this.element,this.paintSurface);
+            this.shape.MoveAgain(this.invoker, this.paintSurface);
         }
     }
 
@@ -225,85 +157,63 @@ namespace tekenprogramma
 
         private PointerRoutedEventArgs e;
         private Shape shape;
+        private Invoker invoker;
+        private Canvas paintSurface;
 
-        public Select(Shape shape, PointerRoutedEventArgs e)
+        public Select(Shape shape, PointerRoutedEventArgs e, Invoker invoker, Canvas paintSurface)
         {
-
             this.e = e;
             this.shape = shape;
+            this.invoker = invoker;
+            this.paintSurface = paintSurface;
         }
 
         public void Execute()
         {
-            this.shape.select(this.e);
+            this.shape.Select(this.invoker, this.e, this.paintSurface);
         }
 
         public void Undo()
         {
-            this.shape.deselect(this.e);
+            this.shape.Deselect(this.invoker, this.e, this.paintSurface);
         }
 
         public void Redo()
         {
-            this.shape.select(this.e);
+            this.shape.Reselect(this.invoker, this.e, this.paintSurface);
         }
     }
 
-    //class deselect
-    public class Deselect : ICommand
-    {
 
-        private PointerRoutedEventArgs e;
-        private Shape shape;
 
-        public Deselect(Shape shape, PointerRoutedEventArgs e)
-        {
-
-            this.e = e;
-            this.shape = shape;
-        }
-
-        public void Execute()
-        {
-            this.shape.deselect(this.e);
-        }
-
-        public void Undo()
-        {
-            this.shape.select(this.e);
-        }
-
-        public void Redo()
-        {
-            this.shape.deselect(this.e);
-        }
-    }
 
     //class saving
     public class Saved : ICommand
     {
         private Shape mycommand;
         private Canvas paintSurface;
+        private Invoker invoker;
 
-        public Saved(Shape mycommand, Canvas paintSurface)
+        public Saved(Shape mycommand, Canvas paintSurface, Invoker invoker)
         {
             this.mycommand = mycommand;
             this.paintSurface = paintSurface;
+            this.invoker = invoker;
         }
 
         public void Execute()
         {
-            this.mycommand.saving(paintSurface);
+            this.mycommand.Saving(paintSurface, invoker);
         }
 
         public void Undo()
         {
-            this.paintSurface.Children.Clear();
+            //this.paintSurface.Children.Clear();
         }
 
         public void Redo()
         {
-            this.paintSurface.Children.Clear();
+            //this.paintSurface.Children.Clear();
         }
     }
 
@@ -312,27 +222,230 @@ namespace tekenprogramma
     {
         private Shape mycommand;
         private Canvas paintSurface;
-
-        public Loaded(Shape mycommand, Canvas paintSurface)
+        private Invoker invoker;
+        public Loaded(Shape mycommand, Canvas paintSurface, Invoker invoker)
         {
             this.mycommand = mycommand;
             this.paintSurface = paintSurface;
+            this.invoker = invoker;
         }
 
         public void Execute()
         {
-            this.mycommand.loading(this.paintSurface);
+            this.mycommand.Loading(this.paintSurface, this.invoker);
         }
 
         public void Undo()
         {
-            this.paintSurface.Children.Clear();
+            //this.paintSurface.Children.Clear();
         }
 
         public void Redo()
         {
-            this.paintSurface.Children.Clear();
+            //this.paintSurface.Children.Clear();
         }
     }
+
+    //class make group
+    public class MakeGroup : ICommand
+    {
+        private Group mycommand;
+        private Canvas selectedCanvas;
+        private Invoker invoker;
+        //private FrameworkElement element;
+
+        //public MakeGroup(Group mycommand, Canvas selectedCanvas, Invoker invoker, FrameworkElement element)
+        public MakeGroup(Group mycommand, Canvas selectedCanvas, Invoker invoker)
+        {
+
+            this.mycommand = mycommand;
+            this.selectedCanvas = selectedCanvas;
+            this.invoker = invoker;
+            //this.element = element;
+        }
+
+        public void Execute()
+        {
+            this.mycommand.MakeGroup(this.mycommand, this.selectedCanvas, this.invoker);
+        }
+
+        public void Undo()
+        {
+            //this.mycommand.UnGroup(this.mycommand, this.selectedCanvas, this.invoker,this.element);
+            this.mycommand.UnGroup(this.selectedCanvas, this.invoker);
+        }
+
+        public void Redo()
+        {
+            this.mycommand.ReGroup(this.selectedCanvas, this.invoker);
+        }
+    }
+
+    //class resize group
+    public class ResizeGroup : ICommand
+    {
+        private Group mycommand;
+        private Canvas paintSurface;
+        private Invoker invoker;
+        private FrameworkElement element;
+        private PointerRoutedEventArgs e;
+
+        public ResizeGroup(Group mycommand, PointerRoutedEventArgs e, Canvas paintSurface, Invoker invoker, FrameworkElement element)
+        {
+            this.mycommand = mycommand;
+            this.invoker = invoker;
+            this.paintSurface = paintSurface;
+            this.element = element;
+            this.e = e;
+        }
+
+        public void Execute()
+        {
+            this.mycommand.Resize(this.invoker, this.e, this.paintSurface, this.element);
+        }
+
+        public void Undo()
+        {
+            this.mycommand.Undo(this.invoker, this.paintSurface);
+        }
+
+        public void Redo()
+        {
+            this.mycommand.Redo(this.invoker, this.paintSurface);
+        }
+    }
+
+    //class move group
+    public class MoveGroup : ICommand
+    {
+        private Group mycommand;
+        private Canvas paintSurface;
+        private Invoker invoker;
+        private FrameworkElement element;
+        private PointerRoutedEventArgs e;
+
+        public MoveGroup(Group mycommand, PointerRoutedEventArgs e, Canvas paintSurface, Invoker invoker, FrameworkElement element)
+        {
+            this.mycommand = mycommand;
+            this.invoker = invoker;
+            this.paintSurface = paintSurface;
+            this.element = element;
+            this.e = e;
+        }
+
+        public void Execute()
+        {
+            this.mycommand.Moving(this.invoker, this.e, this.paintSurface, this.element);
+        }
+
+        public void Undo()
+        {
+            this.mycommand.Undo(this.invoker, this.paintSurface);
+        }
+
+        public void Redo()
+        {
+            this.mycommand.Redo(this.invoker, this.paintSurface);
+        }
+    }
+
+
+    //class make ornament
+    public class MakeOrnament : ICommand
+    {
+        private OrnamentDecorator mycommand;
+        private Canvas paintSurface;
+        private Invoker invoker;
+        private FrameworkElement element;
+        private PointerRoutedEventArgs e;
+        private string ornament;
+        private string position;
+
+        public MakeOrnament(OrnamentDecorator mycommand, PointerRoutedEventArgs e, Canvas paintSurface, Invoker invoker, FrameworkElement element, string ornament, string position)
+        {
+            this.mycommand = mycommand;
+            this.invoker = invoker;
+            this.paintSurface = paintSurface;
+            this.element = element;
+            this.e = e;
+            this.ornament = ornament;
+            this.position = position;
+        }
+
+        public void Execute()
+        {
+            this.mycommand.Draw(this.element, this.ornament, this.position, this.invoker);
+        }
+
+        public void Undo()
+        {
+            this.mycommand.Undraw(this.invoker, this.paintSurface);
+        }
+
+        public void Redo()
+        {
+            this.mycommand.Redraw(this.invoker, this.paintSurface);
+        }
+    }
+
+
+
+    /*
+    //class load group
+    public class LoadGroup : ICommand
+    {
+        private Group mycommand;
+        private Canvas selectedCanvas;
+        private Invoker invoker;
+        public LoadGroup(Group mycommand, Canvas selectedCanvas, Invoker invoker)
+        {
+            this.mycommand = mycommand;
+            this.selectedCanvas = selectedCanvas;
+            this.invoker = invoker;
+        }
+        public void Execute()
+        {
+            this.mycommand.LoadGroup(this.mycommand, this.selectedCanvas, this.invoker);
+        }
+        public void Undo()
+        {
+            this.mycommand.UnloadGroup(this.selectedCanvas, this.invoker);
+        }
+        public void Redo()
+        {
+            this.mycommand.ReloadGroup(this.selectedCanvas, this.invoker);
+        }
+    }
+    */
+
+    ////class select
+    //public class Deselect : ICommand
+    //{
+
+    //    private PointerRoutedEventArgs e;
+    //    private Shape shape;
+    //    private Invoker invoker;
+
+    //    public Deselect(Shape shape, PointerRoutedEventArgs e, Invoker invoker)
+    //    {
+    //        this.e = e;
+    //        this.shape = shape;
+    //    }
+
+    //    public void Execute()
+    //    {
+    //        this.shape.Deselect(this.invoker, this.e);
+    //    }
+
+    //    public void Undo()
+    //    {
+    //        this.shape.Select(this.invoker, this.e);
+    //    }
+
+    //    public void Redo()
+    //    {
+    //        this.shape.Deselect(this.invoker, this.e);
+    //    }
+    //}
 
 }

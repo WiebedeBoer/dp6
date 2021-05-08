@@ -24,6 +24,9 @@ namespace tekenprogramma
         public List<FrameworkElement> selectElementsList = new List<FrameworkElement>();
         public List<FrameworkElement> unselectElementsList = new List<FrameworkElement>();
 
+        //public List<FrameworkElement> groupedElementsList = new List<FrameworkElement>();
+        //public List<FrameworkElement> ungroupedElementsList = new List<FrameworkElement>();
+
         public List<Group> drawnGroups = new List<Group>();
         public List<Group> removedGroups = new List<Group>();
         public List<Group> movedGroups = new List<Group>();
@@ -33,6 +36,9 @@ namespace tekenprogramma
 
         public int counter = 0;
         public int executer = 0;
+
+        public List<TextBlock> drawnOrnaments = new List<TextBlock>();
+        public List<TextBlock> removedOrnaments = new List<TextBlock>();
 
         public Invoker()
         {
@@ -93,4 +99,11 @@ namespace tekenprogramma
         }
 
     }
+
+
+    //public List<Canvas> canvases = new List<Canvas>();
+    //public List<Canvas> removedcanvases = new List<Canvas>();
+
+    //public List<Canvas> selectedCanvases = new List<Canvas>();
+    //public List<Canvas> unselectedCanvases = new List<Canvas>();
 }
