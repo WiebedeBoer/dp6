@@ -8,7 +8,80 @@ using Windows.UI.Xaml.Controls;
 
 namespace tekenprogramma
 {
-    public class Decorator
+
+
+    public interface IShapes
+    {
+        void Draw();
+    }
+
+    public class RectangleShape : IShapes
+    {
+        public void Draw()
+        {
+
+        }
+    }
+
+    public class EllipseShape : IShapes
+    {
+        public void Draw()
+        {
+
+        }
+    }
+
+
+    public abstract class ShapeDecorator : IShapes
+    {
+        protected IShapes decoratedShape;
+
+        public ShapeDecorator(IShapes decoratedShape)
+        {
+            this.decoratedShape = decoratedShape;
+        }
+
+        public virtual void Draw()
+        {
+            decoratedShape.Draw();
+        }
+    }
+
+    public class OrnamentedDecorator : ShapeDecorator
+    {
+
+       public OrnamentedDecorator(IShapes decoratedShape) : base(decoratedShape)
+       //public OrnamentedDecorator(IShapes decoratedShape)
+       {
+            //base(decoratedShape);
+       }
+
+
+       public override void Draw()
+       {
+            decoratedShape.Draw();
+            //SetOrnament(decoratedShape,element,ornament,position,invoker);
+            SetOrnament(decoratedShape);
+        }
+
+        //private void SetOrnament(IShapes decoratedShape, FrameworkElement element, string ornament, string position, Invoker invoker)
+        private void SetOrnament(IShapes decoratedShape)
+        {
+
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+public class Decorator
     {
         public Decorator()
         {
