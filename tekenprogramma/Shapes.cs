@@ -369,6 +369,12 @@ namespace tekenprogramma
                     {
                         if (child is Rectangle)
                         {
+                            //ornament
+                            //if (child.ornament.Text.Length > 5 && child.ornamentPosition.Length > 1)
+                            //{
+                            //    string ostr = "ornament " + child.ornamentPosition + " " + child.ornament.Text;
+                            //}
+                            //element
                             double top = (double)child.GetValue(Canvas.TopProperty);
                             double left = (double)child.GetValue(Canvas.LeftProperty);
                             string str = "rectangle " + left + " " + top + " " + child.Width + " " + child.Height + "\n";
@@ -376,6 +382,12 @@ namespace tekenprogramma
                         }
                         else if (child is Ellipse)
                         {
+                            //ornament
+                            //if (child.ornament.Text.Length > 5 && child.ornamentPosition.Length > 1)
+                            //{
+                            //    string ostr = "ornament " + child.ornamentPosition + " " + child.ornament.Text;
+                            //}
+                            //element
                             double top = (double)child.GetValue(Canvas.TopProperty);
                             double left = (double)child.GetValue(Canvas.LeftProperty);
                             string str = "ellipse " + left + " " + top + " " + child.Width + " " + child.Height + "\n";
@@ -386,6 +398,12 @@ namespace tekenprogramma
                 //grouped and drawn
                 foreach (Group group in invoker.drawnGroups)
                 {
+                    //ornament
+                    if (group.ornament.Text.Length >5 && group.ornamentPosition.Length >1)
+                    {
+                        string ostr = "ornament " + group.ornamentPosition + " " + group.ornament.Text;
+                    }
+                    //group
                     string gstr = group.Display(0, group);
                     lines += gstr;
                 }
@@ -473,6 +491,61 @@ namespace tekenprogramma
                     }
                 }
             }
+            //re add ornaments to elements
+            int ec = invoker.drawnElements.Count();
+            int gc = invoker.drawnGroups.Count();
+            string ge = "";
+            //foreach (string s in readText)
+            for (int inc = readText.Count(); inc > 0; inc--)
+            {
+                string s = readText[inc];
+                string notabs = s.Replace("\t", "");
+                string[] line = Regex.Split(notabs, "\\s+");
+                //remake shapes
+                if (line[0] == "ellipse")
+                {
+                    ec--;
+                    ge = "element";
+                }
+                else if (line[0] == "rectangle")
+                {
+                    ec--;
+                    ge = "element";
+                }
+                else if (line[0] == "group")
+                {
+                    gc--;
+                    ge = "group";
+                    Group selectedgroup = invoker.drawnGroups[gc];
+                    invoker.selectedGroups.Add(selectedgroup);
+                }
+                else if (line[0] == "ornament")
+                {
+                    //add to element
+                    if (ge =="element")
+                    {
+                        OrnamentDecorator ornament = new OrnamentDecorator();
+                        FrameworkElement addToElement = invoker.drawnElements[ec];
+                        ornament.Draw(addToElement, line[2], line[1], invoker); //element, name, position, invoker
+                    }
+                    //add to group
+                    else if(ge =="group")
+                    {
+                        OrnamentDecorator ornament = new OrnamentDecorator();
+                        FrameworkElement addToElement = null;
+                        ornament.Draw(addToElement, line[2], line[1], invoker); //element, name, position, invoker
+                    }
+
+                }
+            }
+            //clear selected groups afterwards
+            int rme = 0;
+            foreach (Group group in invoker.drawnGroups)
+            {
+                invoker.selectedGroups.RemoveAt(rme);
+                rme++;
+            }
+
             int j = 0; //line increment
             int g = 0;//group increment
             //re add elements to groups
@@ -512,6 +585,7 @@ namespace tekenprogramma
                 }
                 k++;
             }
+            
         }
 
         //load ellipse
@@ -573,6 +647,20 @@ namespace tekenprogramma
             }
 
         }
+
+        /*
+        //get ornaments of elements
+        public void GetElementsOrnaments(Canvas paintSurface, Invoker invoker)
+        {
+
+        }
+
+        //get ornament of groups
+        public void GetGroupsOrnaments(Canvas paintSurface, Invoker invoker)
+        {
+
+        }
+        */
 
         //re attach subgroups to group
         public void GetSubGroups(string[] readText, int group, int depth, int start, int stop, Invoker invoker)
