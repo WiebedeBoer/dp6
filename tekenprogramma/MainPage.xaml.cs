@@ -34,6 +34,11 @@ namespace tekenprogramma
         string ornamentName = "ornament";
         string ornamentLoc = "top";
 
+        public Strategy strategy;
+
+        public Strategy rectangleStrategy = RectangleStrategy.GetInstance();
+        public Strategy ellipseStrategy = EllipseStrategy.GetInstance();
+
         public MainPage()
         {
             InitializeComponent();
@@ -143,14 +148,36 @@ namespace tekenprogramma
         //resizing shape
         private void ResizingShape(object sender, PointerRoutedEventArgs e)
         {
+            //calculate size
+            double ex = e.GetCurrentPoint(paintSurface).Position.X;
+            double ey = e.GetCurrentPoint(paintSurface).Position.Y;
+            double lw = Convert.ToDouble(selectedElement.ActualOffset.X); //set width
+            double lh = Convert.ToDouble(selectedElement.ActualOffset.Y); //set height
+            double w = ReturnSmallest(ex, lw);
+            double h = ReturnSmallest(ey, lh);
+
             Location location = new Location();
             location.x = Convert.ToDouble(selectedElement.ActualOffset.X);
             location.y = Convert.ToDouble(selectedElement.ActualOffset.Y);
-            location.width = Convert.ToDouble(selectedElement.Width);
-            location.height = Convert.ToDouble(selectedElement.Height);
+            location.width = w;
+            location.height = h;
+
             Shape shape = new Shape(location.x, location.y, location.width, location.height);
             ICommand place = new Resize(shape, invoker, e, location, paintSurface, selectedElement);
             this.invoker.Execute(place);
+        }
+
+        //give smallest
+        public double ReturnSmallest(double first, double last)
+        {
+            if (first < last)
+            {
+                return last - first;
+            }
+            else
+            {
+                return first - last;
+            }
         }
 
         //
@@ -163,6 +190,7 @@ namespace tekenprogramma
             Group group = new Group(0, 0, 0, 0, "group", 0, 0, paintSurface, invoker, selectedElement);
             ICommand place = new MoveGroup(group, e, paintSurface, invoker, selectedElement);
             this.invoker.Execute(place);
+
         }
 
         //resizing group
@@ -177,6 +205,7 @@ namespace tekenprogramma
         //clicks
         //
 
+        //move click
         private void Move_Click(object sender, RoutedEventArgs e)
         {
             FrameworkElement button = e.OriginalSource as FrameworkElement;
@@ -185,6 +214,7 @@ namespace tekenprogramma
             selecting = true;
         }
 
+        //resize click
         private void Resize_Click(object sender, RoutedEventArgs e)
         {
             FrameworkElement button = e.OriginalSource as FrameworkElement;
@@ -193,7 +223,7 @@ namespace tekenprogramma
             selecting = true;
         }
 
-        //elipse
+        //elipse click
         private void Elipse_Click(object sender, RoutedEventArgs e)
         {
             FrameworkElement button = e.OriginalSource as FrameworkElement;
@@ -202,7 +232,7 @@ namespace tekenprogramma
             selecting = false;
         }
 
-        //rectangle
+        //rectangle click
         private void Rectangle_Click(object sender, RoutedEventArgs e)
         {
             FrameworkElement button = e.OriginalSource as FrameworkElement;
@@ -222,18 +252,19 @@ namespace tekenprogramma
             ornament.Draw(selectedElement, this.ornamentName, this.ornamentLoc, invoker);
         }
 
-        //group
+        //group click
         private void Group_Click(object sender, RoutedEventArgs e)
         {
             FrameworkElement button = e.OriginalSource as FrameworkElement;
             type = button.Name;
+
             Group group = new Group(0, 0, 0, 0, "group", 0, 0, paintSurface, invoker, selectedElement);
             ICommand place = new MakeGroup(group, paintSurface, invoker);
             this.invoker.Execute(place);
             grouping = true;
         }
 
-        //undo
+        //undo click
         private void Undo_Click(object sender, RoutedEventArgs e)
         {
             FrameworkElement button = e.OriginalSource as FrameworkElement;
@@ -242,7 +273,7 @@ namespace tekenprogramma
             grouping = false;
         }
 
-        //redo
+        //redo click
         private void Redo_Click(object sender, RoutedEventArgs e)
         {
             FrameworkElement button = e.OriginalSource as FrameworkElement;
@@ -251,18 +282,15 @@ namespace tekenprogramma
             grouping = false;
         }
 
-        //save
+        //save click
         private void Save_Click(object sender, RoutedEventArgs e)
         {
-            FrameworkElement button = e.OriginalSource as FrameworkElement;
-            type = button.Name;
-            Shape command = new Shape(0, 0, 0, 0);
-            ICommand place = new Saved(command, paintSurface, invoker);
-            invoker.Execute(place);
-            grouping = false;
+            WriteClient writer = new WriteClient();
+            IWriter visitor = new ConcreteVisitorWrite();
+            writer.Client(this.paintSurface, this.invoker, visitor);
         }
 
-        //load
+        //load click
         private void Load_Click(object sender, RoutedEventArgs e)
         {
             FrameworkElement button = e.OriginalSource as FrameworkElement;
@@ -273,21 +301,20 @@ namespace tekenprogramma
             grouping = false;
         }
 
-
-
         private void Front_canvas_PointerMoved(object sender, PointerRoutedEventArgs e)
         {
-            //front_canvas.Background = new SolidColorBrush(Windows.UI.Color.FromArgb(0,0,0,0));
+
         }
 
         private void Width_TextChanged(object sender, TextChangedEventArgs e)
         {
-            this.ornamentName = Width.Text;
+
         }
-        
+
         private void Height_TextChanged(object sender, TextChangedEventArgs e)
         {
-            this.ornamentLoc = Height.Text;
+
         }
+
     }
 }

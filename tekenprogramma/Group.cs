@@ -57,19 +57,23 @@ namespace tekenprogramma
         public List<FrameworkElement> removedElements = new List<FrameworkElement>();
         public List<FrameworkElement> movedElements = new List<FrameworkElement>();
 
-        //public List<Canvas> groupedCanvases = new List<Canvas>();
-        //public List<Canvas> ungroupedCanvases = new List<Canvas>();
-
         public List<Group> addedGroups = new List<Group>();
         public List<Group> movedGroups = new List<Group>();
+
+        public List<IComponent> drawnComponents = new List<IComponent>();
+        public List<IComponent> removedComponents = new List<IComponent>();
+        public List<IComponent> movedComponents = new List<IComponent>();
 
         public Invoker invoker;
         public FrameworkElement element;
         public Canvas lastCanvas;
 
-
         public TextBlock ornament = new TextBlock();
         public string ornamentPosition = null;
+        public List<TextBlock> ornaments = new List<TextBlock>();
+        public List<TextBlock> removedOrnaments = new List<TextBlock>();
+        public List<string> ornamentPositions = new List<string>();
+        public List<string> removedOrnamentPositions = new List<string>();
 
         public Group(double height, double width, double x, double y, string type, int depth, int id, Canvas selectedCanvas, Invoker invoker, FrameworkElement element) : base(height, width, x, y)
         {
@@ -103,6 +107,18 @@ namespace tekenprogramma
                     if (elmcheck == 0)
                     {
                         this.drawnElements.Add(elm);
+                        //add components
+                        if (elm.Name == "Rectangle")
+                        {
+                            IComponent rectangle = new ConcreteComponentRectangle(elm.ActualOffset.X, elm.ActualOffset.Y, elm.Width, elm.Height);
+                            this.drawnComponents.Add(rectangle);
+                        }
+                        else if (elm.Name == "Ellipse")
+                        {
+                            IComponent ellipse = new ConcreteComponentEllipse(elm.ActualOffset.X, elm.ActualOffset.Y, elm.Width, elm.Height);
+                            this.drawnComponents.Add(ellipse);
+                        }
+
                     }
                     //remove selected
                     invoker.unselectElementsList.Add(elm);
@@ -218,87 +234,7 @@ namespace tekenprogramma
         //moving
         //
 
-        //moving
-        public void Moving(Invoker invoker, PointerRoutedEventArgs e, Canvas paintSurface, FrameworkElement selectedelement)
-        {
-            //FrameworkElement selectedelement = invoker.selectElementsList.Last();
-            Group selectedgroup = invoker.selectedGroups.Last();
-            invoker.removedGroups.Add(selectedgroup);
-            //calculate difference in location
-            double leftOffset = Convert.ToDouble(selectedelement.ActualOffset.X) - e.GetCurrentPoint(paintSurface).Position.X;
-            double topOffset = Convert.ToDouble(selectedelement.ActualOffset.Y) - e.GetCurrentPoint(paintSurface).Position.Y;
-            //elements in group
-            if (selectedgroup.drawnElements.Count() > 0)
-            {
-                foreach (FrameworkElement movedElement in selectedgroup.drawnElements)
-                {
-                    Location location = new Location();
-                    location.x = Convert.ToDouble(movedElement.ActualOffset.X) - leftOffset;
-                    location.y = Convert.ToDouble(movedElement.ActualOffset.Y) - topOffset;
-                    location.width = movedElement.Width;
-                    location.height = movedElement.Height;
-                    invoker.executer++;//acceskey add
-                    FrameworkElement madeElement = MovingElement(movedElement, invoker, paintSurface, location);
-                    selectedgroup.movedElements.Add(madeElement);
-                    //selectedgroup.drawnElements.Add(madeElement);
-                    //invoker.movedElements.Add(movedElement);
-                }
-                //selectedgroup.drawnElements.Clear();
-            }
-            //if (selectedgroup.movedElements.Count() >0)
-            //{
-            //    foreach (FrameworkElement drewElement in selectedgroup.movedElements)
-            //    {
-            //        selectedgroup.drawnElements.Add(drewElement);
-            //    }
-            //}
 
-            //remove selected element
-            //invoker.unselectElementsList.Add(selectedelement);
-            //invoker.selectElementsList.RemoveAt(invoker.selectElementsList.Count() - 1);
-
-            if (selectedgroup.addedGroups.Count() > 0)
-            {
-                foreach (Group subgroup in selectedgroup.addedGroups)
-                {
-                    selectedgroup.SubMoving(invoker, subgroup, leftOffset, topOffset, paintSurface); //subgroups
-                }
-            }
-            //add to moved or resized
-            invoker.movedGroups.Add(selectedgroup);
-            //remove selected group
-            invoker.unselectedGroups.Add(selectedgroup);
-            invoker.selectedGroups.RemoveAt(invoker.selectedGroups.Count() - 1);
-
-            Repaint(invoker, paintSurface); //repaint
-        }
-
-        //recursively moving subgroups
-        public void SubMoving(Invoker invoker, Group selectedgroup, double leftOffset, double topOffset, Canvas paintSurface)
-        {
-            //elements in group
-            if (selectedgroup.drawnElements.Count() > 0)
-            {
-                foreach (FrameworkElement movedElement in selectedgroup.drawnElements)
-                {
-                    Location location = new Location();
-                    location.x = Convert.ToDouble(movedElement.ActualOffset.X) - leftOffset;
-                    location.y = Convert.ToDouble(movedElement.ActualOffset.Y) - topOffset;
-                    location.width = movedElement.Width;
-                    location.height = movedElement.Height;
-                    invoker.executer++;//acceskey add
-                    FrameworkElement madeElement = MovingElement(movedElement, invoker, paintSurface, location);
-                    selectedgroup.movedElements.Add(madeElement);
-                    //selectedgroup.drawnElements.Add(madeElement);
-
-                }
-                selectedgroup.movedGroups.Add(selectedgroup);
-            }
-            if (selectedgroup.addedGroups.Count() > 0)
-            {
-                selectedgroup.SubMoving(invoker, selectedgroup, leftOffset, topOffset, paintSurface);
-            }
-        }
 
         //
         //undo redo move resize
@@ -436,91 +372,11 @@ namespace tekenprogramma
         //resizing
         //
 
-        //resize
-        public void Resize(Invoker invoker, PointerRoutedEventArgs e, Canvas paintSurface, FrameworkElement selectedelement)
-        {
-            //FrameworkElement selectedelement = invoker.selectElementsList.Last();
-            Group selectedgroup = invoker.selectedGroups.Last();
-            invoker.removedGroups.Add(selectedgroup);
-            //calculate difference in size
-            //double newWidth = ReturnSmallest(e.GetCurrentPoint(paintSurface).Position.X, Convert.ToDouble(element.ActualOffset.X));
-            //double newHeight = ReturnSmallest(e.GetCurrentPoint(paintSurface).Position.Y, Convert.ToDouble(element.ActualOffset.Y));
-            double newWidth = ReturnSmallest(e.GetCurrentPoint(paintSurface).Position.X, Convert.ToDouble(selectedelement.ActualOffset.X));
-            double newHeight = ReturnSmallest(e.GetCurrentPoint(paintSurface).Position.Y, Convert.ToDouble(selectedelement.ActualOffset.Y));
-            double widthOffset = selectedelement.Width - newWidth;
-            double heightOffset = selectedelement.Height - newHeight;
-            //elements in group
-            if (selectedgroup.drawnElements.Count() > 0)
-            {
-                foreach (FrameworkElement movedElement in selectedgroup.drawnElements)
-                {
-                    Location location = new Location();
-                    location.x = Convert.ToDouble(movedElement.ActualOffset.X);
-                    location.y = Convert.ToDouble(movedElement.ActualOffset.Y);
-                    location.width = Convert.ToDouble(movedElement.Width) - widthOffset;
-                    location.height = Convert.ToDouble(movedElement.Height) - heightOffset;
-                    invoker.executer++; //acceskey add
-                    FrameworkElement madeElement = ResizingElement(movedElement, invoker, paintSurface, location);
-                    selectedgroup.movedElements.Add(madeElement);
-                    //this.drawnElements.RemoveAt(this.drawnElements.Count() -1);
-                    //selectedgroup.drawnElements.Add(madeElement);
-                }
-                //selectedgroup.drawnElements.Clear();
-            }
-            //if (selectedgroup.movedElements.Count() > 0)
-            //{
-            //    foreach (FrameworkElement drewElement in selectedgroup.movedElements)
-            //    {
-            //        selectedgroup.drawnElements.Add(drewElement);
-            //    }
-            //}
-
-            //remove selected element
-            //invoker.unselectElementsList.Add(selectedelement);
-            //invoker.selectElementsList.RemoveAt(invoker.selectElementsList.Count() - 1);
-
-            if (selectedgroup.addedGroups.Count() > 0)
-            {
-                foreach (Group subgroup in selectedgroup.addedGroups)
-                {
-                    subgroup.SubResize(invoker, selectedgroup, widthOffset, heightOffset, paintSurface); //subgroups
-                }
-            }
-            //add to moved or resized
-            invoker.movedGroups.Add(selectedgroup);
-            //remove selected group
-            invoker.unselectedGroups.Add(selectedgroup);
-            invoker.selectedGroups.RemoveAt(invoker.selectedGroups.Count() - 1);
-            Repaint(invoker, paintSurface);//repaint
-        }
-
-        //recursively resize subgroups
-        public void SubResize(Invoker invoker, Group selectedgroup, double widthOffset, double heightOffset, Canvas paintSurface)
-        {
-            if (selectedgroup.drawnElements.Count() > 0)
-            {
-                foreach (FrameworkElement movedElement in selectedgroup.drawnElements)
-                {
-                    Location location = new Location();
-                    location.x = Convert.ToDouble(movedElement.ActualOffset.X);
-                    location.y = Convert.ToDouble(movedElement.ActualOffset.Y);
-                    location.width = Convert.ToDouble(movedElement.Width) - widthOffset;
-                    location.height = Convert.ToDouble(movedElement.Height) - heightOffset;
-                    invoker.executer++; //acceskey add
-                    FrameworkElement madeElement = ResizingElement(movedElement, invoker, paintSurface, location);
-                    selectedgroup.movedElements.Add(madeElement);
-                    //this.drawnElements.RemoveAt(this.drawnElements.Count() -1);
-                    //selectedgroup.drawnElements.Add(madeElement);
-                }
-                selectedgroup.movedGroups.Add(selectedgroup);
-            }
-            if (selectedgroup.addedGroups.Count() > 0)
-            {
-                selectedgroup.SubResize(invoker, selectedgroup, widthOffset, heightOffset, paintSurface);
-            }
-        }
 
 
+        //
+        //other
+        //
 
         //repaint
         public void Repaint(Invoker invoker, Canvas paintSurface)
