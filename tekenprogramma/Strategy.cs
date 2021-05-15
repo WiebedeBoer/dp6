@@ -31,6 +31,16 @@ namespace tekenprogramma
 
         public abstract string ToString(double x, double y, double width, double height);
 
+        public abstract void Element(FrameworkElement element);
+
+        public abstract FrameworkElement GetElement();
+
+        public abstract void Add(TextBlock lab, string position);
+
+
+         public abstract void Remove();
+
+
         public abstract FrameworkElement Execute(double left, double top, double width, double height, FrameworkElement g, bool selected, Invoker invoker);
     }
 

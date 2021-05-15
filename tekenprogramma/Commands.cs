@@ -417,17 +417,18 @@ namespace tekenprogramma
         private Canvas paintSurface;
         private Invoker invoker;
         private FrameworkElement element;
-        private PointerRoutedEventArgs e;
+        //private PointerRoutedEventArgs e;
         private string ornament;
         private string position;
 
-        public MakeOrnament(OrnamentDecorator mycommand, PointerRoutedEventArgs e, Canvas paintSurface, Invoker invoker, FrameworkElement element, string ornament, string position)
+        //public MakeOrnament(OrnamentDecorator mycommand, PointerRoutedEventArgs e, Canvas paintSurface, Invoker invoker, FrameworkElement element, string ornament, string position)
+        public MakeOrnament(OrnamentDecorator mycommand, Canvas paintSurface, Invoker invoker, FrameworkElement element, string ornament, string position)
         {
             this.mycommand = mycommand;
             this.invoker = invoker;
             this.paintSurface = paintSurface;
             this.element = element;
-            this.e = e;
+            //this.e = e;
             this.ornament = ornament;
             this.position = position;
         }

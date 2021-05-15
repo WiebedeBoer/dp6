@@ -89,6 +89,8 @@ namespace tekenprogramma
             this.element = element;
         }
 
+        public override void Execute(){}
+
         //make new group
         public void MakeGroup(Group group, Canvas selectedCanvas, Invoker invoker)
         {
@@ -176,6 +178,10 @@ namespace tekenprogramma
                 }
                 inc++;
             }
+            //if ()
+            //{
+
+            //}
             invoker.drawnGroups.RemoveAt(number);
         }
 

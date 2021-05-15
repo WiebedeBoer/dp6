@@ -87,20 +87,37 @@ namespace tekenprogramma
 
     public class Decorator : Baseshape
     {
+        protected Baseshape component;
+
+        //public Decorator(double x, double y, double width, double height) : base(x, y, width, height)
+        //{
+
+        //}
+
         public Decorator(double x, double y, double width, double height) : base(x, y, width, height)
         {
 
         }
 
-        public void Draw()
+        public override void Execute()
         {
-
+            if (component != null)
+            {
+                component.Execute();
+            }
         }
     }
 
-    public class OrnamentDecorator
+    public class OrnamentDecorator : Decorator
     {
-        public OrnamentDecorator()
+
+        //: base(x, y, width, height)
+        //public OrnamentDecorator() 
+        //{
+
+        //}
+
+        public OrnamentDecorator(double x, double y, double width, double height) : base(x, y, width, height)
         {
 
         }
@@ -178,6 +195,8 @@ namespace tekenprogramma
                     parent.Children.Add(lab);
 
                     lastgroup.ornament = lab;
+                    lastgroup.ornaments.Add(lab);
+                    lastgroup.ornamentPositions.Add(position);
 
                 }
                 //else ornament add to element
@@ -213,6 +232,21 @@ namespace tekenprogramma
                     Canvas parent = (Canvas)element.Parent;
                     parent.Children.Add(lab);
                 }
+                invoker.drawnOrnaments.Add(lab);
+
+                int inc = 0;
+                //int num = 0;
+                foreach (Strategy component in invoker.drawnComponents)
+                {
+                    FrameworkElement fetched = component.GetElement();
+                    if (fetched.AccessKey == element.AccessKey)
+                    {
+                        //num = inc;
+                        component.Add(lab,position);
+                    }
+                    inc++;
+                }
+
             }
 
 
@@ -224,6 +258,8 @@ namespace tekenprogramma
             TextBlock lastlab = invoker.drawnOrnaments.Last();
             invoker.removedOrnaments.Add(lastlab);
             invoker.drawnOrnaments.RemoveAt(invoker.drawnOrnaments.Count() -1);
+
+            Repaint(invoker, paintSurface); //repaint
         }
 
         public void Redraw(Invoker invoker, Canvas paintSurface)
@@ -231,12 +267,28 @@ namespace tekenprogramma
             TextBlock lastlab = invoker.removedOrnaments.Last();
             invoker.drawnOrnaments.Add(lastlab);
             invoker.removedOrnaments.RemoveAt(invoker.removedOrnaments.Count() - 1);
+
+            Repaint(invoker, paintSurface); //repaint
         }
 
         public void SetOrnament()
         {
 
         }
+
+        public void Repaint(Invoker invoker, Canvas paintSurface)
+        {
+            paintSurface.Children.Clear();
+            foreach (FrameworkElement drawelement in invoker.drawnElements)
+            {
+                paintSurface.Children.Add(drawelement); //add
+            }
+            foreach (FrameworkElement drawornament in invoker.drawnOrnaments)
+            {
+                paintSurface.Children.Add(drawornament); //add
+            }
+        }
+
     }
 
 }

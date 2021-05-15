@@ -47,6 +47,11 @@ namespace tekenprogramma
             this.height = height;
         }
 
+        public override void Execute()
+        {
+            throw new NotImplementedException();
+        }
+
         // Selects the shape
         public void Select(Invoker invoker, PointerRoutedEventArgs e, Canvas paintSurface)
         {
@@ -94,6 +99,10 @@ namespace tekenprogramma
             {
                 paintSurface.Children.Add(drawelement); //add
             }
+            foreach (FrameworkElement drawornament in invoker.drawnOrnaments)
+            {
+                paintSurface.Children.Add(drawornament); //add
+            }
         }
 
         //
@@ -117,6 +126,7 @@ namespace tekenprogramma
             Repaint(invoker, paintSurface); //repaint
 
             Strategy component = ConcreteComponentRectangle.GetInstance();
+            component.Element(newRectangle);
             invoker.drawnComponents.Add(component);
         }
 
@@ -137,6 +147,7 @@ namespace tekenprogramma
             Repaint(invoker, paintSurface); //repaint
 
             Strategy component = ConcreteComponentEllipse.GetInstance();
+            component.Element(newEllipse);
             invoker.drawnComponents.Add(component);
         }
 
@@ -532,16 +543,17 @@ namespace tekenprogramma
                 {
                     //add to element
                     if (ge =="element")
-                    {
-                        OrnamentDecorator ornament = new OrnamentDecorator();
+                    {                     
                         FrameworkElement addToElement = invoker.drawnElements[ec];
+                        OrnamentDecorator ornament = new OrnamentDecorator(addToElement.ActualOffset.X, addToElement.ActualOffset.Y, addToElement.Width, addToElement.Height);
                         ornament.Draw(addToElement, line[2], line[1], invoker); //element, name, position, invoker
                     }
                     //add to group
                     else if(ge =="group")
                     {
-                        OrnamentDecorator ornament = new OrnamentDecorator();
+                        
                         FrameworkElement addToElement = null;
+                        OrnamentDecorator ornament = new OrnamentDecorator(0,0,0,0);
                         ornament.Draw(addToElement, line[2], line[1], invoker); //element, name, position, invoker
                     }
 

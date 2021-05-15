@@ -67,6 +67,6 @@ namespace tekenprogramma
         //public abstract bool GetIfSelected(double x, double y);
         //public abstract bool GetHandleIfSelected(double x, double y);
 
-
+        public abstract void Execute();
     }
 }

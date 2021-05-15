@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -138,8 +138,6 @@ namespace tekenprogramma
         public double height;
         public static Strategy strategy;
 
-        public FrameworkElement element;
-
         public List<TextBlock> ornaments = new List<TextBlock>();
         public List<TextBlock> removedOrnaments = new List<TextBlock>();
         public List<string> ornamentPositions = new List<string>();
@@ -169,28 +167,6 @@ namespace tekenprogramma
         {
             string str = "rectangle" + x + " " + y + " " + width + " " + height;
             return str;
-        }
-
-        public override void Element(FrameworkElement element)
-        {
-            this.element = element;
-        }
-
-        public override FrameworkElement GetElement()
-        {
-            return this.element;
-        }
-
-        public override void Add(TextBlock lab, string position)
-        {
-            this.ornaments.Add(lab);
-            this.ornamentPositions.Add(position);
-        }
-
-        public override void Remove()
-        {
-            this.ornaments.RemoveAt(this.ornaments.Count() -1);
-            this.ornamentPositions.RemoveAt(this.ornamentPositions.Count() -1);
         }
 
         //Note that calling ConcreteComponent which matches the current class name. 
@@ -242,8 +218,6 @@ namespace tekenprogramma
         public double height;
         public static Strategy strategy;
 
-        public FrameworkElement element { get; set; }
-
         public List<TextBlock> ornaments = new List<TextBlock>();
         public List<TextBlock> removedOrnaments = new List<TextBlock>();
         public List<string> ornamentPositions = new List<string>();
@@ -274,28 +248,6 @@ namespace tekenprogramma
         {
             FrameworkElement madeElement = visitor.VisitConcreteComponentEllipse(this, invoker, selectedelement, paintSurface, location);
             return madeElement;
-        }
-
-        public override void Element(FrameworkElement element)
-        {
-            this.element = element;
-        }
-
-        public override FrameworkElement GetElement()
-        {
-            return this.element;
-        }
-
-        public override void Add(TextBlock lab, string position)
-        {
-            this.ornaments.Add(lab);
-            this.ornamentPositions.Add(position);
-        }
-
-        public override void Remove()
-        {
-            this.ornaments.RemoveAt(this.ornaments.Count() - 1);
-            this.ornamentPositions.RemoveAt(this.ornamentPositions.Count() - 1);
         }
 
         public override String ToString(double x, double y, double width, double height)
@@ -473,12 +425,21 @@ namespace tekenprogramma
 
     }
 
+
+
+
+
+
+
+
+
     //write to file client class
     public class WriteClient
     {
         public async void Client(Canvas paintSurface, Invoker invoker, IWriter visitor)
         {
-            string lines = ""; //lines to file
+
+            string lines = "";
             int i = 0;
             //ungrouped and drawn
             foreach (FrameworkElement child in paintSurface.Children)
@@ -499,7 +460,6 @@ namespace tekenprogramma
             //grouped and drawn
             foreach (Group group in invoker.drawnGroups)
             {
-                string slines = "";
                 string gstr = Display(0, group.depth, group, visitor, paintSurface);
                 lines += gstr;
             }
@@ -507,76 +467,7 @@ namespace tekenprogramma
             Windows.Storage.StorageFolder storageFolder = Windows.Storage.ApplicationData.Current.LocalFolder;
             Windows.Storage.StorageFile sampleFile = await storageFolder.CreateFileAsync("dp6data.txt", Windows.Storage.CreationCollisionOption.ReplaceExisting);
             await Windows.Storage.FileIO.WriteTextAsync(sampleFile, lines);
-        }
 
-        //display lines for saving.
-        public string Display(int depth, int maxdepth, Group group, IWriter visitor, Canvas paintSurface)
-        {
-            string str = "";
-            if (depth < maxdepth)
-            {
-                //Display group.
-                //group parts counts.
-                int groupcount = group.drawnElements.Count() + group.addedGroups.Count();
-                
-                int i = 0;
-                
-                //depth++;
-                while (i < depth)
-                {
-                    str += "\t";
-                }
-                str = str + "group " + groupcount + "\n"; //group label
-                depth = depth + 1; //add depth tab
-
-                if (groupcount ==0)
-                {
-                    return str;
-                }
-                else { 
-                    //Recursively display child nodes.   
-                    if (group.drawnElements.Count() > 0)
-                    {
-                        int j = 0;
-                        //foreach (FrameworkElement child in group.drawnElements)
-                        foreach (IComponent component in group.drawnComponents)
-                        {
-                            FrameworkElement child = group.drawnElements[j];
-                            j++;
-                            int k = 0;
-                            while (k < depth)
-                            {
-                                str += "\t";
-                                k++;
-                            }
-                            str = str + component.Write(visitor, child, paintSurface);
-                        }
-                    }
-                    if (group.addedGroups.Count() > 0)
-                    {
-                        //Recursively through groups.
-                        foreach (Group subgroup in group.addedGroups)
-                        {
-                            int subgroupcount = subgroup.drawnElements.Count() + subgroup.addedGroups.Count();
-                            if (subgroupcount > 0)
-                            {
-                                //string gstr = "";
-                                string substr = Display(depth + 1, maxdepth, subgroup, visitor, paintSurface);
-                                str = str + substr;
-                            }
-                        }
-                    }
-                    return str;
-                }
-                
-                
-                return str;
-                
-            }
-            else
-            {
-                return str;
-            }
         }
 
         //check if element is already in group
@@ -592,18 +483,6 @@ namespace tekenprogramma
                         if (groupelement.AccessKey == element.AccessKey)
                         {
                             counter++;
-                            return counter;
-                        }
-                    }
-                }
-                if (group.addedGroups.Count() > 0 && counter == 0)
-                {
-                    foreach (Group subgroup in group.addedGroups)
-                    {
-                        counter = CheckInSubGroup(subgroup, invoker, element);
-                        if (counter > 0)
-                        {
-                            return counter;
                         }
                     }
                 }
@@ -611,33 +490,71 @@ namespace tekenprogramma
             return counter;
         }
 
-        //check if element in sub group
-        public int CheckInSubGroup(Group group, Invoker invoker, FrameworkElement element)
+        //display lines for saving.
+        public string Display(int depth, int maxdepth, Group group, IWriter visitor, Canvas paintSurface)
         {
-            int counter = 0;
-            if (group.drawnElements.Count() > 0)
+            string str = "";
+            if (depth <= maxdepth)
             {
-                foreach (FrameworkElement groupelement in group.drawnElements)
+                //Display group.
+                int groupcount = group.drawnElements.Count() + group.addedGroups.Count();
+
+                if (groupcount == 0)
                 {
-                    if (groupelement.AccessKey == element.AccessKey)
+                    return str;
+                }
+                else
+                {
+                    int i = 0;
+                    while (i < depth)
                     {
-                        counter++;
-                        return counter;
+                        str += "\t";
+                    }
+                    str = str + "group " + groupcount + "\n";
+                    //Recursively display child nodes.
+                    depth = depth + 1; //add depth tab
+                    if (group.drawnElements.Count() > 0)
+                    {
+                        int j = 0;
+                        //foreach (FrameworkElement child in group.drawnElements)
+                        foreach (IComponent component in group.drawnComponents)
+                        {
+                            FrameworkElement child = group.drawnElements[j];
+                            j++;
+
+                            int k = 0;
+                            while (k < depth)
+                            {
+                                str += "\t";
+                                k++;
+                            }
+
+                            str = str + component.Write(visitor, child, paintSurface);
+                        }
+                    }
+                    if (group.addedGroups.Count() > 0)
+                    {
+                        //recursively through groups
+                        foreach (Group subgroup in group.addedGroups)
+                        {
+                            int subgroupcount = subgroup.drawnElements.Count() + subgroup.addedGroups.Count();
+                            if (subgroupcount > 0)
+                            {
+                                Display(depth + 1, maxdepth, subgroup, visitor, paintSurface);
+                            }
+                        }
+                        return str;
+                    }
+                    else
+                    {
+                        return str;
                     }
                 }
             }
-            if (group.addedGroups.Count() > 0 && counter == 0)
+            else
             {
-                foreach (Group subgroup in group.addedGroups)
-                {
-                    counter = CheckInSubGroup(subgroup, invoker, element);
-                    if (counter > 0)
-                    {
-                        return counter;
-                    }
-                }
+                return str;
             }
-            return counter;
         }
 
     }

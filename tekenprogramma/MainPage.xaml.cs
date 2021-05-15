@@ -247,11 +247,16 @@ namespace tekenprogramma
         private void Ornament_Click(object sender, RoutedEventArgs e)
         {
             FrameworkElement button = e.OriginalSource as FrameworkElement;
-            type = button.Name;           
+            type = button.Name;
+
+            //Shape shape = new Shape(0,0, 50, 50);
+            OrnamentDecorator ornament = new OrnamentDecorator(selectedElement.ActualOffset.X, selectedElement.ActualOffset.Y, selectedElement.Width, selectedElement.Height);
+            ICommand place = new MakeOrnament(ornament, paintSurface, this.invoker, selectedElement, this.ornamentName, this.ornamentLoc);
+            this.invoker.Execute(place);
 
             //create decorator
-            OrnamentDecorator ornament = new OrnamentDecorator();
-            ornament.Draw(selectedElement, this.ornamentName, this.ornamentLoc, invoker);
+            //OrnamentDecorator ornament = new OrnamentDecorator(selectedElement.ActualOffset.X, selectedElement.ActualOffset.Y, selectedElement.Width, selectedElement.Height);
+            //ornament.Draw(selectedElement, this.ornamentName, this.ornamentLoc, invoker);
         }
 
         //group click
