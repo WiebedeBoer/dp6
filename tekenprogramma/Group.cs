@@ -75,7 +75,7 @@ namespace tekenprogramma
         public List<string> ornamentPositions = new List<string>();
         public List<string> removedOrnamentPositions = new List<string>();
 
-        public Group(double height, double width, double x, double y, string type, int depth, int id, Canvas selectedCanvas, Invoker invoker, FrameworkElement element) : base(height, width, x, y)
+        public Group(double x, double y, double width, double height, string type, int depth, int id, Canvas selectedCanvas, Invoker invoker, FrameworkElement element) : base(x, y, width, height)
         {
             this.height = height;
             this.width = width;
@@ -92,8 +92,11 @@ namespace tekenprogramma
         //make new group
         public void MakeGroup(Group group, Canvas selectedCanvas, Invoker invoker)
         {
+
+            int newdepth = 0;
             if (invoker.selectElementsList.Count() > 0)
             {
+                newdepth = 1;
                 //get selected elements
                 foreach (FrameworkElement elm in invoker.selectElementsList)
                 //for (int index = 0; index < invoker.selectElementsList.Count(); index++)
@@ -133,8 +136,10 @@ namespace tekenprogramma
                 }
                 invoker.selectElementsList.Clear();
             }
+            
             if (invoker.selectedGroups.Count() > 0)
             {
+                newdepth = 1;
                 //get selected groups
                 foreach (Group selectedgroup in invoker.selectedGroups)
                 {
@@ -143,9 +148,15 @@ namespace tekenprogramma
                     invoker.unselectedGroups.Add(selectedgroup);
                     //invoker.selectedGroups.RemoveAt(invoker.selectedGroups.Count() - 1);
                     SelectedGroup(selectedgroup, invoker); //remove from drawn groups
+                    if (selectedgroup.depth > newdepth)
+                    {
+                        newdepth = newdepth + selectedgroup.depth;
+                    }
                 }
                 invoker.selectedGroups.Clear();
+                
             }
+            this.depth = newdepth;
             invoker.drawnGroups.Add(this);
             this.id = invoker.executer; //id
 

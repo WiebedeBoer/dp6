@@ -85,9 +85,9 @@ namespace tekenprogramma
 
 
 
-public class Decorator
+    public class Decorator : Baseshape
     {
-        public Decorator()
+        public Decorator(double x, double y, double width, double height) : base(x, y, width, height)
         {
 
         }
@@ -214,13 +214,6 @@ public class Decorator
                     parent.Children.Add(lab);
                 }
             }
-
-
-
-
-
-
-
 
 
 

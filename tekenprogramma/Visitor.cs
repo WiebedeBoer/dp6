@@ -426,15 +426,19 @@ namespace tekenprogramma
     }
 
 
+
+
+
+
+
+
+
     //write to file client class
     public class WriteClient
     {
         public async void Client(Canvas paintSurface, Invoker invoker, IWriter visitor)
         {
-            //string fileText = "";
 
-            //try
-            //{
             string lines = "";
             int i = 0;
             //ungrouped and drawn
@@ -443,56 +447,26 @@ namespace tekenprogramma
                 int elmcheck = CheckInGroup(invoker, child); //see if already in group
                 if (elmcheck == 0)
                 {
-                    IComponent component = invoker.drawnComponents[i];
-                    //IWriter visitor = new ConcreteVisitorWrite();
-                    string str = component.Write(visitor, child, paintSurface);
-                    lines += str;
-
-                    //if (child is Rectangle)
-                    //{
-                    //    double top = (double)child.GetValue(Canvas.TopProperty);
-                    //    double left = (double)child.GetValue(Canvas.LeftProperty);
-                    //    string str = "rectangle " + left + " " + top + " " + child.Width + " " + child.Height + "\n";
-                    //    lines += str;
-                    //}
-                    //else if (child is Ellipse)
-                    //{
-                    //    double top = (double)child.GetValue(Canvas.TopProperty);
-                    //    double left = (double)child.GetValue(Canvas.LeftProperty);
-                    //    string str = "ellipse " + left + " " + top + " " + child.Width + " " + child.Height + "\n";
-                    //    lines += str;
-                    //}
+                    if (child is Rectangle || child is Ellipse)
+                    {
+                        IComponent component = invoker.drawnComponents[i];
+                        //IWriter visitor = new ConcreteVisitorWrite();
+                        string str = component.Write(visitor, child, paintSurface);
+                        lines += str;
+                    }
                 }
                 i++;
             }
             //grouped and drawn
             foreach (Group group in invoker.drawnGroups)
             {
-                string gstr = Display(0, group, visitor, paintSurface);
+                string gstr = Display(0, group.depth, group, visitor, paintSurface);
                 lines += gstr;
             }
             //create and write to file
             Windows.Storage.StorageFolder storageFolder = Windows.Storage.ApplicationData.Current.LocalFolder;
-            Windows.Storage.StorageFile sampleFile = await storageFolder.CreateFileAsync("dp4data.txt", Windows.Storage.CreationCollisionOption.ReplaceExisting);
+            Windows.Storage.StorageFile sampleFile = await storageFolder.CreateFileAsync("dp6data.txt", Windows.Storage.CreationCollisionOption.ReplaceExisting);
             await Windows.Storage.FileIO.WriteTextAsync(sampleFile, lines);
-            //}
-            ////file errors
-            //catch (System.IO.FileNotFoundException)
-            //{
-            //    fileText = "File not found.";
-            //}
-            //catch (System.IO.FileLoadException)
-            //{
-            //    fileText = "File Failed to load.";
-            //}
-            //catch (System.IO.IOException e)
-            //{
-            //    fileText = "File IO error " + e;
-            //}
-            //catch (Exception err)
-            //{
-            //    fileText = err.Message;
-            //}
 
         }
 
@@ -516,74 +490,72 @@ namespace tekenprogramma
             return counter;
         }
 
-        //display lines for saving
-        public string Display(int depth, Group group, IWriter visitor, Canvas paintSurface)
+        //display lines for saving.
+        public string Display(int depth, int maxdepth, Group group, IWriter visitor, Canvas paintSurface)
         {
-            //Display group.
             string str = "";
-            //Add group.
-            int i = 0;
-            while (i < depth)
+            if (depth <= maxdepth)
             {
-                str += "\t";
-            }
-            int groupcount = group.drawnElements.Count() + group.addedGroups.Count();
-            str = str + "group " + groupcount + "\n";
+                //Display group.
+                int groupcount = group.drawnElements.Count() + group.addedGroups.Count();
 
-            //Recursively display child nodes.
-            depth = depth + 1; //add depth tab
-            if (group.drawnElements.Count() > 0)
-            {
-                int j = 0;
-                //foreach (FrameworkElement child in group.drawnElements)
-                foreach (IComponent component in group.drawnComponents)
+                if (groupcount == 0)
                 {
-                    FrameworkElement child = group.drawnElements[j];
-                    j++;
-
-                    int k = 0;
-                    while (k < depth)
+                    return str;
+                }
+                else
+                {
+                    int i = 0;
+                    while (i < depth)
                     {
                         str += "\t";
-                        k++;
                     }
+                    str = str + "group " + groupcount + "\n";
+                    //Recursively display child nodes.
+                    depth = depth + 1; //add depth tab
+                    if (group.drawnElements.Count() > 0)
+                    {
+                        int j = 0;
+                        //foreach (FrameworkElement child in group.drawnElements)
+                        foreach (IComponent component in group.drawnComponents)
+                        {
+                            FrameworkElement child = group.drawnElements[j];
+                            j++;
 
-                    str = str + component.Write(visitor, child, paintSurface);
-                    //lines += str;
-                    //if (child is Rectangle)
-                    //{
-                    //    int j = 0;
-                    //    while (j < depth)
-                    //    {
-                    //        str += "\t";
-                    //        j++;
-                    //    }
-                    //    str = str + "rectangle " + child.ActualOffset.X + " " + child.ActualOffset.Y + " " + child.Width + " " + child.Height + "\n";
-                    //}
-                    ////else if (child is Ellipse)
-                    //else
-                    //{
-                    //    int j = 0;
-                    //    while (j < depth)
-                    //    {
-                    //        str += "\t";
-                    //        j++;
-                    //    }
-                    //    str = str + "ellipse " + child.ActualOffset.X + " " + child.ActualOffset.Y + " " + child.Width + " " + child.Height + "\n";
-                    //}
+                            int k = 0;
+                            while (k < depth)
+                            {
+                                str += "\t";
+                                k++;
+                            }
+
+                            str = str + component.Write(visitor, child, paintSurface);
+                        }
+                    }
+                    if (group.addedGroups.Count() > 0)
+                    {
+                        //recursively through groups
+                        foreach (Group subgroup in group.addedGroups)
+                        {
+                            int subgroupcount = subgroup.drawnElements.Count() + subgroup.addedGroups.Count();
+                            if (subgroupcount > 0)
+                            {
+                                Display(depth + 1, maxdepth, subgroup, visitor, paintSurface);
+                            }
+                        }
+                        return str;
+                    }
+                    else
+                    {
+                        return str;
+                    }
                 }
             }
-            if (group.addedGroups.Count() > 0)
+            else
             {
-                foreach (Group subgroup in group.addedGroups)
-                {
-                    Display(depth + 1, subgroup, visitor, paintSurface);
-                }
+                return str;
             }
-            return str;
         }
-
-
 
     }
 

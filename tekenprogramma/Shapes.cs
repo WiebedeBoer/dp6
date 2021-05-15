@@ -32,6 +32,9 @@ namespace tekenprogramma
         public FrameworkElement nextelement; //next element
         public FrameworkElement selectedElement; //selected element
 
+        public IComponent prevcomponent;
+        public IComponent nextcomponent;
+
         //file IO
         public string fileText { get; set; }
 
@@ -112,6 +115,9 @@ namespace tekenprogramma
             Canvas.SetTop(newRectangle, y); //set top position 
             invoker.drawnElements.Add(newRectangle);
             Repaint(invoker, paintSurface); //repaint
+
+            Strategy component = ConcreteComponentRectangle.GetInstance();
+            invoker.drawnComponents.Add(component);
         }
 
         //create ellipse
@@ -129,6 +135,9 @@ namespace tekenprogramma
             Canvas.SetTop(newEllipse, y);//set top position   
             invoker.drawnElements.Add(newEllipse);
             Repaint(invoker, paintSurface); //repaint
+
+            Strategy component = ConcreteComponentEllipse.GetInstance();
+            invoker.drawnComponents.Add(component);
         }
 
         //
@@ -409,7 +418,7 @@ namespace tekenprogramma
                 }
                 //create and write to file
                 Windows.Storage.StorageFolder storageFolder = Windows.Storage.ApplicationData.Current.LocalFolder;
-                Windows.Storage.StorageFile sampleFile = await storageFolder.CreateFileAsync("dp3data.txt", Windows.Storage.CreationCollisionOption.ReplaceExisting);
+                Windows.Storage.StorageFile sampleFile = await storageFolder.CreateFileAsync("dp6data.txt", Windows.Storage.CreationCollisionOption.ReplaceExisting);
                 await Windows.Storage.FileIO.WriteTextAsync(sampleFile, lines);
             }
             //file errors
@@ -454,7 +463,7 @@ namespace tekenprogramma
             invoker.counter = 0;
             //read file
             Windows.Storage.StorageFolder storageFolder = Windows.Storage.ApplicationData.Current.LocalFolder;
-            Windows.Storage.StorageFile saveFile = await storageFolder.GetFileAsync("dp3data.txt");
+            Windows.Storage.StorageFile saveFile = await storageFolder.GetFileAsync("dp6data.txt");
             string text = await Windows.Storage.FileIO.ReadTextAsync(saveFile);
             //load shapes
             string[] readText = Regex.Split(text, "\\n+");
@@ -496,7 +505,7 @@ namespace tekenprogramma
             int gc = invoker.drawnGroups.Count();
             string ge = "";
             //foreach (string s in readText)
-            for (int inc = readText.Count(); inc > 0; inc--)
+            for (int inc = readText.Count() - 1; inc > 0; inc--)
             {
                 string s = readText[inc];
                 string notabs = s.Replace("\t", "");
