@@ -110,13 +110,17 @@ namespace tekenprogramma
                         //add components
                         if (elm.Name == "Rectangle")
                         {
+                            Strategy component = ConcreteComponentRectangle.GetInstance();
                             //IComponent rectangle = new ConcreteComponentRectangle(elm.ActualOffset.X, elm.ActualOffset.Y, elm.Width, elm.Height);
                             //this.drawnComponents.Add(rectangle);
+                            this.drawnComponents.Add(component);
                         }
                         else if (elm.Name == "Ellipse")
                         {
+                            Strategy component = ConcreteComponentEllipse.GetInstance();
                             //IComponent ellipse = new ConcreteComponentEllipse(elm.ActualOffset.X, elm.ActualOffset.Y, elm.Width, elm.Height);
                             //this.drawnComponents.Add(ellipse);
+                            this.drawnComponents.Add(component);
                         }
 
                     }
@@ -632,7 +636,7 @@ namespace tekenprogramma
         }
 
         //display lines for saving
-        public override string Display(int depth, Group group)
+        public string Display(int depth, Group group)
         {
             //Display group.
             string str = "";

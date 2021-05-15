@@ -18,7 +18,7 @@ namespace tekenprogramma
 {
 
     //shape class
-    public class Shape
+    public class Shape : Baseshape
     {
         public double x;
         public double y;
@@ -36,7 +36,7 @@ namespace tekenprogramma
         public string fileText { get; set; }
 
         //shape
-        public Shape(double x, double y, double width, double height)
+        public Shape(double x, double y, double width, double height) : base(height, width, x, y)
         {
             this.x = x;
             this.y = y;
