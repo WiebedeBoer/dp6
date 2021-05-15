@@ -9,12 +9,13 @@ using Windows.UI.Xaml.Controls;
 namespace tekenprogramma
 {
 
-
+    //shape interface
     public interface IShapes
     {
         void Draw();
     }
 
+    //rectangle shape from shape interface
     public class RectangleShape : IShapes
     {
         public void Draw()
@@ -23,6 +24,7 @@ namespace tekenprogramma
         }
     }
 
+    //ellipse shape from shape interface
     public class EllipseShape : IShapes
     {
         public void Draw()
@@ -31,7 +33,7 @@ namespace tekenprogramma
         }
     }
 
-
+    //abstract shape decorator
     public abstract class ShapeDecorator : IShapes
     {
         protected IShapes decoratedShape;
@@ -47,14 +49,16 @@ namespace tekenprogramma
         }
     }
 
+    //concrete decorator
     public class OrnamentedDecorator : ShapeDecorator
     {
 
-       public OrnamentedDecorator(IShapes decoratedShape) : base(decoratedShape)
-       //public OrnamentedDecorator(IShapes decoratedShape)
-       {
+        public OrnamentedDecorator(IShapes decoratedShape) : base(decoratedShape)
+        //public OrnamentedDecorator(IShapes decoratedShape)
+        //public override void OrnamentedDecorator()
+        {
             //base(decoratedShape);
-       }
+        }
 
 
        public override void Draw()
@@ -62,7 +66,7 @@ namespace tekenprogramma
             decoratedShape.Draw();
             //SetOrnament(decoratedShape,element,ornament,position,invoker);
             SetOrnament(decoratedShape);
-        }
+       }
 
         //private void SetOrnament(IShapes decoratedShape, FrameworkElement element, string ornament, string position, Invoker invoker)
         private void SetOrnament(IShapes decoratedShape)

@@ -110,13 +110,13 @@ namespace tekenprogramma
                         //add components
                         if (elm.Name == "Rectangle")
                         {
-                            IComponent rectangle = new ConcreteComponentRectangle(elm.ActualOffset.X, elm.ActualOffset.Y, elm.Width, elm.Height);
-                            this.drawnComponents.Add(rectangle);
+                            //IComponent rectangle = new ConcreteComponentRectangle(elm.ActualOffset.X, elm.ActualOffset.Y, elm.Width, elm.Height);
+                            //this.drawnComponents.Add(rectangle);
                         }
                         else if (elm.Name == "Ellipse")
                         {
-                            IComponent ellipse = new ConcreteComponentEllipse(elm.ActualOffset.X, elm.ActualOffset.Y, elm.Width, elm.Height);
-                            this.drawnComponents.Add(ellipse);
+                            //IComponent ellipse = new ConcreteComponentEllipse(elm.ActualOffset.X, elm.ActualOffset.Y, elm.Width, elm.Height);
+                            //this.drawnComponents.Add(ellipse);
                         }
 
                     }

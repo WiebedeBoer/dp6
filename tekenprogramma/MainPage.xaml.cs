@@ -36,8 +36,10 @@ namespace tekenprogramma
 
         public Strategy strategy;
 
-        public Strategy rectangleStrategy = RectangleStrategy.GetInstance();
-        public Strategy ellipseStrategy = EllipseStrategy.GetInstance();
+        //public Strategy rectangleStrategy = RectangleStrategy.GetInstance();
+        //public Strategy ellipseStrategy = EllipseStrategy.GetInstance();
+        public Strategy rectangleStrategy = ConcreteComponentRectangle.GetInstance();
+        public Strategy ellipseStrategy = ConcreteComponentEllipse.GetInstance();
 
         public MainPage()
         {
