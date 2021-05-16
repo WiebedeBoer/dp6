@@ -68,10 +68,13 @@ namespace tekenprogramma
         public FrameworkElement element;
         public Canvas lastCanvas;
 
-        public TextBlock ornament = new TextBlock();
-        public string ornamentPosition = null;
+        //public TextBlock ornament = new TextBlock();
+        //public string ornamentPosition = null;
+
         public List<TextBlock> ornaments = new List<TextBlock>();
         public List<TextBlock> removedOrnaments = new List<TextBlock>();
+        public List<string> ornamentNames = new List<string>();
+        public List<string> remvedOrnamentNames = new List<string>();
         public List<string> ornamentPositions = new List<string>();
         public List<string> removedOrnamentPositions = new List<string>();
 
@@ -90,6 +93,21 @@ namespace tekenprogramma
         }
 
         public override void Execute(){}
+
+        //public void Add(TextBlock lab, string position, string name)
+        public void Add(string position, string name)
+        {
+            //this.ornaments.Add(lab);
+            this.ornamentPositions.Add(position);
+            this.ornamentNames.Add(name);
+        }
+
+        public void Remove()
+        {
+            //this.ornaments.RemoveAt(this.ornaments.Count() - 1);
+            this.ornamentPositions.RemoveAt(this.ornamentPositions.Count() - 1);
+            this.ornamentNames.RemoveAt(this.ornamentNames.Count() - 1);
+        }
 
         //make new group
         public void MakeGroup(Group group, Canvas selectedCanvas, Invoker invoker)
@@ -574,138 +592,11 @@ namespace tekenprogramma
             }
         }
 
-        //moving element in group
-        public FrameworkElement MovingElement(FrameworkElement element, Invoker invoker, Canvas paintSurface, Location location)
-        {
-            FrameworkElement returnelement = null;
-            KeyNumber(element, invoker); //move selected at removed
-            //create at new location
-            if (element.Name == "Rectangle")
-            {
-                Rectangle newRectangle = new Rectangle(); //instance of new rectangle shape
-                newRectangle.AccessKey = invoker.executer.ToString();
-                newRectangle.Width = location.width; //set width
-                newRectangle.Height = location.height; //set height     
-                SolidColorBrush brush = new SolidColorBrush(); //brush
-                brush.Color = Windows.UI.Colors.Yellow; //standard brush color is blue
-                newRectangle.Fill = brush; //fill color
-                newRectangle.Name = "Rectangle"; //attach name
-                Canvas.SetLeft(newRectangle, location.x);//set left position
-                Canvas.SetTop(newRectangle, location.y); //set top position 
-                invoker.drawnElements.Add(newRectangle);
-                returnelement = newRectangle;
-            }
-            else if (element.Name == "Ellipse")
-            {
-                Ellipse newEllipse = new Ellipse(); //instance of new ellipse shape
-                newEllipse.AccessKey = invoker.executer.ToString();
-                newEllipse.Width = location.width;
-                newEllipse.Height = location.height;
-                SolidColorBrush brush = new SolidColorBrush();//brush
-                brush.Color = Windows.UI.Colors.Yellow;//standard brush color is blue
-                newEllipse.Fill = brush;//fill color
-                newEllipse.Name = "Ellipse";//attach name
-                Canvas.SetLeft(newEllipse, location.x);//set left position
-                Canvas.SetTop(newEllipse, location.y);//set top position
-                invoker.drawnElements.Add(newEllipse);
-                returnelement = newEllipse;
-            }
-            return returnelement;
-        }
+        //
+        //loading
+        //
 
-        //resizing element in group
-        public FrameworkElement ResizingElement(FrameworkElement element, Invoker invoker, Canvas paintSurface, Location location)
-        {
-            FrameworkElement returnelement = null;
-            KeyNumber(element, invoker); //move selected at removed
-            //create at new size
-            if (element.Name == "Rectangle")
-            {
-                Rectangle newRectangle = new Rectangle(); //instance of new rectangle shape
-                newRectangle.AccessKey = invoker.executer.ToString();
-                newRectangle.Width = location.width; //set width
-                newRectangle.Height = location.height; //set height     
-                SolidColorBrush brush = new SolidColorBrush(); //brush
-                brush.Color = Windows.UI.Colors.Yellow; //standard brush color is blue
-                newRectangle.Fill = brush; //fill color
-                newRectangle.Name = "Rectangle"; //attach name
-                Canvas.SetLeft(newRectangle, location.x);
-                Canvas.SetTop(newRectangle, location.y);
-                invoker.drawnElements.Add(newRectangle);
-                returnelement = newRectangle;
-            }
-            else if (element.Name == "Ellipse")
-            {
-                Ellipse newEllipse = new Ellipse(); //instance of new ellipse shape
-                newEllipse.AccessKey = invoker.executer.ToString();
-                newEllipse.Width = location.width; //set width
-                newEllipse.Height = location.height; //set height 
-                SolidColorBrush brush = new SolidColorBrush();//brush
-                brush.Color = Windows.UI.Colors.Yellow;//standard brush color is blue
-                newEllipse.Fill = brush;//fill color
-                newEllipse.Name = "Ellipse";//attach name
-                Canvas.SetLeft(newEllipse, location.x);//set left position
-                Canvas.SetTop(newEllipse, location.y);//set top position
-                invoker.drawnElements.Add(newEllipse);
-                returnelement = newEllipse;
-            }
-            return returnelement;
-        }
-
-        //display lines for saving
-        public string Display(int depth, Group group)
-        {
-            //Display group.
-            string str = "";
-            //Add group.
-            int i = 0;
-            while (i < depth)
-            {
-                str += "\t";
-            }
-            int groupcount = group.drawnElements.Count() + group.addedGroups.Count();
-            str = str + "group " + groupcount + "\n";
-
-            //Recursively display child nodes.
-            depth = depth + 1; //add depth tab
-            if (group.drawnElements.Count() > 0)
-            {
-                foreach (FrameworkElement child in group.drawnElements)
-                {
-                    if (child is Rectangle)
-                    {
-                        int j = 0;
-                        while (j < depth)
-                        {
-                            str += "\t";
-                            j++;
-                        }
-                        str = str + "rectangle " + child.ActualOffset.X + " " + child.ActualOffset.Y + " " + child.Width + " " + child.Height + "\n";
-                    }
-                    //else if (child is Ellipse)
-                    else
-                    {
-                        int j = 0;
-                        while (j < depth)
-                        {
-                            str += "\t";
-                            j++;
-                        }
-                        str = str + "ellipse " + child.ActualOffset.X + " " + child.ActualOffset.Y + " " + child.Width + " " + child.Height + "\n";
-                    }
-                }
-            }
-            if (group.addedGroups.Count() > 0)
-            {
-                foreach (Group subgroup in group.addedGroups)
-                {
-                    subgroup.Display(depth + 1, subgroup);
-                }
-            }
-            return str;
-        }
-
-
+        //loading
         public void LoadGroup(Group grouping, Canvas paintSurface, Invoker invoker, int linenumber, int start, int stop, string text)
         {
             string[] readText = Regex.Split(text, "\\n+");
@@ -788,6 +679,211 @@ namespace tekenprogramma
             paintSurface.Children.Add(newRectangle);
             invoker.drawnElements.Add(newRectangle);
         }
+
+
+
+
+
+
+
+
+        /*
+        //moving element in group
+        public FrameworkElement MovingElement(FrameworkElement element, Invoker invoker, Canvas paintSurface, Location location)
+        {
+            FrameworkElement returnelement = null;
+            KeyNumber(element, invoker); //move selected at removed
+            //create at new location
+            if (element.Name == "Rectangle")
+            {
+                Rectangle newRectangle = new Rectangle(); //instance of new rectangle shape
+                newRectangle.AccessKey = invoker.executer.ToString();
+                newRectangle.Width = location.width; //set width
+                newRectangle.Height = location.height; //set height     
+                SolidColorBrush brush = new SolidColorBrush(); //brush
+                brush.Color = Windows.UI.Colors.Yellow; //standard brush color is blue
+                newRectangle.Fill = brush; //fill color
+                newRectangle.Name = "Rectangle"; //attach name
+                Canvas.SetLeft(newRectangle, location.x);//set left position
+                Canvas.SetTop(newRectangle, location.y); //set top position 
+                invoker.drawnElements.Add(newRectangle);
+                returnelement = newRectangle;
+            }
+            else if (element.Name == "Ellipse")
+            {
+                Ellipse newEllipse = new Ellipse(); //instance of new ellipse shape
+                newEllipse.AccessKey = invoker.executer.ToString();
+                newEllipse.Width = location.width;
+                newEllipse.Height = location.height;
+                SolidColorBrush brush = new SolidColorBrush();//brush
+                brush.Color = Windows.UI.Colors.Yellow;//standard brush color is blue
+                newEllipse.Fill = brush;//fill color
+                newEllipse.Name = "Ellipse";//attach name
+                Canvas.SetLeft(newEllipse, location.x);//set left position
+                Canvas.SetTop(newEllipse, location.y);//set top position
+                invoker.drawnElements.Add(newEllipse);
+                returnelement = newEllipse;
+            }
+            return returnelement;
+        }
+
+        //resizing element in group
+        public FrameworkElement ResizingElement(FrameworkElement element, Invoker invoker, Canvas paintSurface, Location location)
+        {
+            FrameworkElement returnelement = null;
+            KeyNumber(element, invoker); //move selected at removed
+            //create at new size
+            if (element.Name == "Rectangle")
+            {
+                Rectangle newRectangle = new Rectangle(); //instance of new rectangle shape
+                newRectangle.AccessKey = invoker.executer.ToString();
+                newRectangle.Width = location.width; //set width
+                newRectangle.Height = location.height; //set height     
+                SolidColorBrush brush = new SolidColorBrush(); //brush
+                brush.Color = Windows.UI.Colors.Yellow; //standard brush color is blue
+                newRectangle.Fill = brush; //fill color
+                newRectangle.Name = "Rectangle"; //attach name
+                Canvas.SetLeft(newRectangle, location.x);
+                Canvas.SetTop(newRectangle, location.y);
+                invoker.drawnElements.Add(newRectangle);
+                returnelement = newRectangle;
+            }
+            else if (element.Name == "Ellipse")
+            {
+                Ellipse newEllipse = new Ellipse(); //instance of new ellipse shape
+                newEllipse.AccessKey = invoker.executer.ToString();
+                newEllipse.Width = location.width; //set width
+                newEllipse.Height = location.height; //set height 
+                SolidColorBrush brush = new SolidColorBrush();//brush
+                brush.Color = Windows.UI.Colors.Yellow;//standard brush color is blue
+                newEllipse.Fill = brush;//fill color
+                newEllipse.Name = "Ellipse";//attach name
+                Canvas.SetLeft(newEllipse, location.x);//set left position
+                Canvas.SetTop(newEllipse, location.y);//set top position
+                invoker.drawnElements.Add(newEllipse);
+                returnelement = newEllipse;
+            }
+            return returnelement;
+        }
+        */
+
+        /*
+        //display lines for saving.
+        public string Display(int depth, Group group, IWriter visitor, Canvas paintSurface)
+        {
+            string str = "";
+            //if (depth <= maxdepth)
+            //{
+                //Display group.
+                //group parts counts.
+                int groupcount = group.drawnElements.Count() + group.addedGroups.Count();
+                int i = 0;
+                while (i < depth)
+                {
+                    str += "\t";
+                    i++;
+                }
+                str = str + "group " + groupcount + "\n"; //group label
+
+                if (groupcount >= 0)
+                {
+                    int newdepth = depth + 1;
+                    //Recursively display child nodes.   
+                    if (group.drawnElements.Count() > 0)
+                    {
+                        int j = 0;
+                        //foreach (FrameworkElement child in group.drawnElements)
+                        foreach (IComponent component in group.drawnComponents)
+                        {
+                            FrameworkElement child = group.drawnElements[j];
+                            j++;
+                            int k = 0;
+                            while (k < newdepth)
+                            {
+                                str += "\t";
+                                k++;
+                            }
+                            str = str + component.Write(visitor, child, paintSurface);
+                        }
+                    }
+                    if (group.addedGroups.Count() > 0)
+                    {
+                        //Recursively through groups.
+                        foreach (Group subgroup in group.addedGroups)
+                        {
+                            int subgroupcount = subgroup.drawnElements.Count() + subgroup.addedGroups.Count();
+                            if (subgroupcount > 0)
+                            {
+                                //string gstr = "";
+                                //WriteClient client = new WriteClient();
+                                string substr = subgroup.Display(newdepth, subgroup, visitor, paintSurface);
+                                str = str + substr;
+                            }
+                        }
+                    }
+                }
+            //}
+            return str;
+        }
+        */
+
+
+
+        ////display lines for saving
+        //public string Display(int depth, Group group)
+        //{
+        //    //Display group.
+        //    string str = "";
+        //    //Add group.
+        //    int i = 0;
+        //    while (i < depth)
+        //    {
+        //        str += "\t";
+        //    }
+        //    int groupcount = group.drawnElements.Count() + group.addedGroups.Count();
+        //    str = str + "group " + groupcount + "\n";
+
+        //    //Recursively display child nodes.
+        //    depth = depth + 1; //add depth tab
+        //    if (group.drawnElements.Count() > 0)
+        //    {
+        //        foreach (FrameworkElement child in group.drawnElements)
+        //        {
+        //            if (child is Rectangle)
+        //            {
+        //                int j = 0;
+        //                while (j < depth)
+        //                {
+        //                    str += "\t";
+        //                    j++;
+        //                }
+        //                str = str + "rectangle " + child.ActualOffset.X + " " + child.ActualOffset.Y + " " + child.Width + " " + child.Height + "\n";
+        //            }
+        //            //else if (child is Ellipse)
+        //            else
+        //            {
+        //                int j = 0;
+        //                while (j < depth)
+        //                {
+        //                    str += "\t";
+        //                    j++;
+        //                }
+        //                str = str + "ellipse " + child.ActualOffset.X + " " + child.ActualOffset.Y + " " + child.Width + " " + child.Height + "\n";
+        //            }
+        //        }
+        //    }
+        //    if (group.addedGroups.Count() > 0)
+        //    {
+        //        foreach (Group subgroup in group.addedGroups)
+        //        {
+        //            subgroup.Display(depth + 1, subgroup);
+        //        }
+        //    }
+        //    return str;
+        //}
+
+
+
 
 
 

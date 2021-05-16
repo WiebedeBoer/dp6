@@ -435,7 +435,7 @@ namespace tekenprogramma
 
         public void Execute()
         {
-            this.mycommand.Draw(this.element, this.ornament, this.position, this.invoker);
+            this.mycommand.SetOrnament(this.element, this.ornament, this.position, this.invoker);
         }
 
         public void Undo()

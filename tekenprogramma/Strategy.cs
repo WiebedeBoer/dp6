@@ -9,12 +9,7 @@ using System.Collections.Generic;
 
 namespace tekenprogramma
 {
-    /*
-    public interface IStrategy
-    {
-        FrameworkElement Execute(double left, double top, double width, double height, FrameworkElement g, bool selected, Invoker invoker);
-    }
-    */
+
 
 
     public abstract class Strategy : IComponent
@@ -35,14 +30,22 @@ namespace tekenprogramma
 
         public abstract FrameworkElement GetElement();
 
-        public abstract void Add(TextBlock lab, string position);
+        //public abstract void Add(TextBlock lab, string position, string name);
+        public abstract void Add(string position, string name);
 
-
-         public abstract void Remove();
+        public abstract void Remove();
 
 
         public abstract FrameworkElement Execute(double left, double top, double width, double height, FrameworkElement g, bool selected, Invoker invoker);
     }
+
+
+    /*
+    public interface IStrategy
+    {
+        FrameworkElement Execute(double left, double top, double width, double height, FrameworkElement g, bool selected, Invoker invoker);
+    }
+    */
 
 
     /*

@@ -114,224 +114,14 @@ namespace tekenprogramma
         }
     }
 
-    //
-    //components
-    //
 
-    //component interface
-    public interface IComponent
-    {
-        FrameworkElement Accept(IVisitor visitor, Invoker invoker, PointerRoutedEventArgs e, Canvas paintSurface, FrameworkElement selectedelement, Location location);
-        string Write(IWriter visitor, FrameworkElement element, Canvas paintSurface);
 
-        string ToString(double x, double y, double width, double height);
 
-        FrameworkElement Execute(double left, double top, double width, double height, FrameworkElement g, bool selected, Invoker invoker);
-    }
 
-    //rectangle component singleton
-    public class ConcreteComponentRectangle : Strategy
-    {
-        public double x;
-        public double y;
-        public double width;
-        public double height;
-        public static Strategy strategy;
 
-        public FrameworkElement element;
 
-        public List<TextBlock> ornaments = new List<TextBlock>();
-        public List<TextBlock> removedOrnaments = new List<TextBlock>();
-        public List<string> ornamentPositions = new List<string>();
-        public List<string> removedOrnamentPositions = new List<string>();
 
-        //public ConcreteComponentRectangle(double x, double y, double width, double height)
-        private ConcreteComponentRectangle()
-        //public ConcreteComponentRectangle()
-        {
-            //this.x = x;
-            //this.y = y;
-            //this.width = width;
-            //this.height = height;
-        }
 
-        // Prevents the strategy from instantiating multiple times
-        public static Strategy GetInstance()
-        {
-            if (strategy == null)
-            {
-                strategy = new ConcreteComponentRectangle();
-            }
-            return strategy;
-        }
-
-        public override String ToString(double x, double y, double width, double height)
-        {
-            string str = "rectangle" + x + " " + y + " " + width + " " + height;
-            return str;
-        }
-
-        public override void Element(FrameworkElement element)
-        {
-            this.element = element;
-        }
-
-        public override FrameworkElement GetElement()
-        {
-            return this.element;
-        }
-
-        public override void Add(TextBlock lab, string position)
-        {
-            this.ornaments.Add(lab);
-            this.ornamentPositions.Add(position);
-        }
-
-        public override void Remove()
-        {
-            this.ornaments.RemoveAt(this.ornaments.Count() -1);
-            this.ornamentPositions.RemoveAt(this.ornamentPositions.Count() -1);
-        }
-
-        //Note that calling ConcreteComponent which matches the current class name. 
-        //This way we let the visitor know the class of the component it works with.
-        public override FrameworkElement Accept(IVisitor visitor, Invoker invoker, PointerRoutedEventArgs e, Canvas paintSurface, FrameworkElement selectedelement, Location location)
-        {
-            FrameworkElement madeElement = visitor.VisitConcreteComponentRectangle(this, invoker, selectedelement, paintSurface, location);
-            return madeElement;
-        }
-
-        public override string Write(IWriter visitor, FrameworkElement element, Canvas paintSurface)
-        {
-            string str = visitor.WriteRectangle(this, element, paintSurface);
-            return str;
-        }
-
-        // Concrete Components may have special methods that don't exist in their base class or interface. 
-        //The Visitor is still able to use these methods since it's aware of the component's concrete class.
-        public override FrameworkElement Execute(double x, double y, double width, double height, FrameworkElement g, bool selected, Invoker invoker)
-        {
-            Rectangle newRectangle = new Rectangle(); //instance of new rectangle shape
-            newRectangle.AccessKey = invoker.executer.ToString();
-            newRectangle.Width = width; //set width
-            newRectangle.Height = height; //set height     
-            SolidColorBrush brush = new SolidColorBrush(); //brush
-            brush.Color = Windows.UI.Colors.Blue; //standard brush color is blue
-            newRectangle.Fill = brush; //fill color
-            newRectangle.Name = "Rectangle"; //attach name
-            Canvas.SetLeft(newRectangle, x); //set left position
-            Canvas.SetTop(newRectangle, y); //set top position 
-            g = newRectangle;
-
-            this.x = x;
-            this.y = y;
-            this.width = width;
-            this.height = height;
-
-            return g;
-
-        }
-    }
-
-    //ellipse component singleton
-    public class ConcreteComponentEllipse : Strategy
-    {
-        public double x;
-        public double y;
-        public double width;
-        public double height;
-        public static Strategy strategy;
-
-        public FrameworkElement element { get; set; }
-
-        public List<TextBlock> ornaments = new List<TextBlock>();
-        public List<TextBlock> removedOrnaments = new List<TextBlock>();
-        public List<string> ornamentPositions = new List<string>();
-        public List<string> removedOrnamentPositions = new List<string>();
-
-        //public ConcreteComponentEllipse(double x, double y, double width, double height)
-        //public ConcreteComponentEllipse()
-        private ConcreteComponentEllipse()
-        {
-            //this.x = x;
-            //this.y = y;
-            //this.width = width;
-            //this.height = height;
-        }
-
-        // Prevents the strategy from instantiating multiple times
-        public static Strategy GetInstance()
-        {
-            if (strategy == null)
-            {
-                strategy = new ConcreteComponentEllipse();
-            }
-            return strategy;
-        }
-
-        // Same here: ConcreteComponent => ConcreteComponent
-        public override FrameworkElement Accept(IVisitor visitor, Invoker invoker, PointerRoutedEventArgs e, Canvas paintSurface, FrameworkElement selectedelement, Location location)
-        {
-            FrameworkElement madeElement = visitor.VisitConcreteComponentEllipse(this, invoker, selectedelement, paintSurface, location);
-            return madeElement;
-        }
-
-        public override void Element(FrameworkElement element)
-        {
-            this.element = element;
-        }
-
-        public override FrameworkElement GetElement()
-        {
-            return this.element;
-        }
-
-        public override void Add(TextBlock lab, string position)
-        {
-            this.ornaments.Add(lab);
-            this.ornamentPositions.Add(position);
-        }
-
-        public override void Remove()
-        {
-            this.ornaments.RemoveAt(this.ornaments.Count() - 1);
-            this.ornamentPositions.RemoveAt(this.ornamentPositions.Count() - 1);
-        }
-
-        public override String ToString(double x, double y, double width, double height)
-        {
-            string str = "ellipse" + x + " " + y + " " + width + " " + height;
-            return str;
-        }
-
-        public override string Write(IWriter visitor, FrameworkElement element, Canvas paintSurface)
-        {
-            string str = visitor.WriteEllipse(this, element, paintSurface);
-            return str;
-        }
-
-        public override FrameworkElement Execute(double x, double y, double width, double height, FrameworkElement g, bool selected, Invoker invoker)
-        {
-            Ellipse newEllipse = new Ellipse(); //instance of new ellipse shape
-            newEllipse.AccessKey = invoker.executer.ToString();
-            newEllipse.Width = width;
-            newEllipse.Height = height;
-            SolidColorBrush brush = new SolidColorBrush();//brush
-            brush.Color = Windows.UI.Colors.Blue;//standard brush color is blue
-            newEllipse.Fill = brush;//fill color
-            newEllipse.Name = "Ellipse";//attach name
-            Canvas.SetLeft(newEllipse, x);//set left position
-            Canvas.SetTop(newEllipse, y);//set top position   
-            g = newEllipse;
-
-            this.x = x;
-            this.y = y;
-            this.width = width;
-            this.height = height;
-
-            return g;
-        }
-    }
 
     //visitor interface
     public interface IVisitor
@@ -513,27 +303,35 @@ namespace tekenprogramma
         public string Display(int depth, int maxdepth, Group group, IWriter visitor, Canvas paintSurface)
         {
             string str = "";
-            if (depth < maxdepth)
+            if (depth <=maxdepth)
             {
                 //Display group.
                 //group parts counts.
                 int groupcount = group.drawnElements.Count() + group.addedGroups.Count();
-                
+                //add tabs.
                 int i = 0;
-                
-                //depth++;
                 while (i < depth)
                 {
                     str += "\t";
+                    i++;
                 }
-                str = str + "group " + groupcount + "\n"; //group label
-                depth = depth + 1; //add depth tab
-
-                if (groupcount ==0)
+                //ornaments of group.
+                int o = 0;
+                if (group.ornamentNames.Count() >0)
                 {
-                    return str;
+                    
+                    foreach (string name in group.ornamentNames)
+                    {
+                        str = str + "ornament " + group.ornamentPositions[o] + " " +name;
+                        o++;
+                    }
                 }
-                else { 
+                //group label.
+                str = str + "group " + groupcount + "\n";
+                //group members.
+                if (groupcount >= 0)
+                {
+                    int newdepth = depth + 1;
                     //Recursively display child nodes.   
                     if (group.drawnElements.Count() > 0)
                     {
@@ -543,8 +341,9 @@ namespace tekenprogramma
                         {
                             FrameworkElement child = group.drawnElements[j];
                             j++;
+                            //add tabs.
                             int k = 0;
-                            while (k < depth)
+                            while (k < newdepth)
                             {
                                 str += "\t";
                                 k++;
@@ -552,7 +351,7 @@ namespace tekenprogramma
                             str = str + component.Write(visitor, child, paintSurface);
                         }
                     }
-                    if (group.addedGroups.Count() > 0)
+                    if (group.addedGroups.Count() > 0 && newdepth <= maxdepth)
                     {
                         //Recursively through groups.
                         foreach (Group subgroup in group.addedGroups)
@@ -561,22 +360,15 @@ namespace tekenprogramma
                             if (subgroupcount > 0)
                             {
                                 //string gstr = "";
-                                string substr = Display(depth + 1, maxdepth, subgroup, visitor, paintSurface);
+                                //WriteClient client = new WriteClient();
+                                string substr = Display(newdepth, maxdepth, subgroup, visitor, paintSurface);
                                 str = str + substr;
                             }
                         }
                     }
-                    return str;
                 }
-                
-                
-                return str;
-                
-            }
-            else
-            {
-                return str;
-            }
+            }         
+            return str;
         }
 
         //check if element is already in group
@@ -647,27 +439,63 @@ namespace tekenprogramma
     {
         string WriteRectangle(ConcreteComponentRectangle component, FrameworkElement element, Canvas paintSurface);
         string WriteEllipse(ConcreteComponentEllipse component, FrameworkElement element, Canvas paintSurface);
+
+        string WriteRectangleOrnament(ConcreteComponentRectangle component);
+
+        string WriteEllipseOrnament(ConcreteComponentEllipse component);
     }
 
     //concrete writer class
     public class ConcreteVisitorWrite : IWriter
     {
-
+        //rectangle line
         public string WriteRectangle(ConcreteComponentRectangle component, FrameworkElement element, Canvas paintSurface)
         {
             double top = (double)element.GetValue(Canvas.TopProperty);
             double left = (double)element.GetValue(Canvas.LeftProperty);
             string str = "rectangle " + left + " " + top + " " + element.Width + " " + element.Height + "\n";
-            //lines += str;
             return str;
         }
 
+        //ellipse line
         public string WriteEllipse(ConcreteComponentEllipse component, FrameworkElement element, Canvas paintSurface)
         {
             double top = (double)element.GetValue(Canvas.TopProperty);
             double left = (double)element.GetValue(Canvas.LeftProperty);
             string str = "ellipse " + left + " " + top + " " + element.Width + " " + element.Height + "\n";
-            //lines += str;
+            return str;
+        }
+
+        //ornament lines
+        public string WriteRectangleOrnament(ConcreteComponentRectangle component)
+        {
+            string str = "";
+
+            if (component.ornamentNames.Count() >0)
+            {
+                int i = 0;
+                foreach (string name in component.ornamentNames)
+                {
+                    str = str + "ornament " + component.ornamentPositions[i] + " " + name + "\n";
+                    i++;
+                }
+            }
+            return str;
+        }
+
+        public string WriteEllipseOrnament(ConcreteComponentEllipse component)
+        {
+            string str = "";
+
+            if (component.ornamentNames.Count() > 0)
+            {
+                int i = 0;
+                foreach (string name in component.ornamentNames)
+                {
+                    str = str + "ornament " + component.ornamentPositions[i] + " " + name + "\n";
+                    i++;
+                }
+            }
             return str;
         }
 

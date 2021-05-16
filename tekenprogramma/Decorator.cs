@@ -9,82 +9,6 @@ using Windows.UI.Xaml.Controls;
 namespace tekenprogramma
 {
 
-    //shape interface
-    public interface IShapes
-    {
-        void Draw();
-    }
-
-    //rectangle shape from shape interface
-    public class RectangleShape : IShapes
-    {
-        public void Draw()
-        {
-
-        }
-    }
-
-    //ellipse shape from shape interface
-    public class EllipseShape : IShapes
-    {
-        public void Draw()
-        {
-
-        }
-    }
-
-    //abstract shape decorator
-    public abstract class ShapeDecorator : IShapes
-    {
-        protected IShapes decoratedShape;
-
-        public ShapeDecorator(IShapes decoratedShape)
-        {
-            this.decoratedShape = decoratedShape;
-        }
-
-        public virtual void Draw()
-        {
-            decoratedShape.Draw();
-        }
-    }
-
-    //concrete decorator
-    public class OrnamentedDecorator : ShapeDecorator
-    {
-
-        public OrnamentedDecorator(IShapes decoratedShape) : base(decoratedShape)
-        //public OrnamentedDecorator(IShapes decoratedShape)
-        //public override void OrnamentedDecorator()
-        {
-            //base(decoratedShape);
-        }
-
-
-       public override void Draw()
-       {
-            decoratedShape.Draw();
-            //SetOrnament(decoratedShape,element,ornament,position,invoker);
-            SetOrnament(decoratedShape);
-       }
-
-        //private void SetOrnament(IShapes decoratedShape, FrameworkElement element, string ornament, string position, Invoker invoker)
-        private void SetOrnament(IShapes decoratedShape)
-        {
-
-        }
-    }
-
-
-
-
-
-
-
-
-
-
-
     public class Decorator : Baseshape
     {
         protected Baseshape component;
@@ -122,27 +46,58 @@ namespace tekenprogramma
 
         }
 
-        public void Draw(FrameworkElement element, string ornament, string position, Invoker invoker)
+
+        public void SetOrnament(FrameworkElement element, string ornament, string position, Invoker invoker)
+        {
+            if (ornament.Length > 5 && (position == "top" || position == "bottom" || position == "left" || position == "right" || position == "Top" || position == "Bottom" || position == "Left" || position == "Right"))
+            {
+                string gs = ornament.Substring(0, 5);
+                //if ornament add to goup
+                if (gs == "groep" || gs == "group")
+                {
+                    Group lastgroup = invoker.selectedGroups.Last();
+                    lastgroup.Add(position, ornament);
+                }
+                //else ornament add to element
+                else
+                {
+                    int inc = 0;
+                    //int num = 0;
+                    foreach (Strategy component in invoker.drawnComponents)
+                    {
+                        FrameworkElement fetched = component.GetElement();
+                        if (fetched.AccessKey == element.AccessKey)
+                        {
+                            //num = inc;
+                            component.Add(position, ornament);
+                        }
+                        inc++;
+                    }
+                }
+                //draw
+                Draw(element, ornament, position, invoker, false);
+            }
+        }
+
+        public void Draw(FrameworkElement element, string ornament, string position, Invoker invoker, bool firstdraw)
         {
             TextBlock lab = new TextBlock();
             lab.Text = ornament;
-
             if (ornament.Length >5)
             {
                 string gs = lab.Text.Substring(0, 5);
-
-                //if ornament add to goup
-                if (gs == "groep")
+                //if ornament add to goup.
+                if (gs == "groep" || gs =="group")
                 {
                     Group lastgroup = invoker.selectedGroups.Last();
-
+                    //group size variables.
                     double groupleft = 1000;
                     double grouptop = 1000;
                     double groupwidth = 0;
                     double groupheight = 0;
                     double groupright = 0;
                     double groupbottom = 0;
-                    //calculate group size
+                    //calculate group size.
                     foreach (FrameworkElement elm in lastgroup.drawnElements)
                     {
                         if (Convert.ToDouble(elm.ActualOffset.X) < groupleft)
@@ -169,87 +124,71 @@ namespace tekenprogramma
                     {
                         Canvas.SetLeft(lab, groupright - groupleft);
                         Canvas.SetTop(lab, grouptop - 25);
-                        lastgroup.ornamentPosition = "top";
+                        //lastgroup.ornamentPosition = "top";
                     }
                     else if (position == "bottom")
                     {
                         Canvas.SetLeft(lab, groupright - groupleft);
                         Canvas.SetTop(lab, grouptop + groupheight + 25);
-                        lastgroup.ornamentPosition = "bottom";
+                        //lastgroup.ornamentPosition = "bottom";
                     }
                     else if (position == "left")
                     {
                         Canvas.SetLeft(lab, groupleft - 25);
                         Canvas.SetTop(lab, groupbottom - grouptop);
-                        lastgroup.ornamentPosition = "left";
+                        //lastgroup.ornamentPosition = "left";
                     }
                     else if (position == "right")
                     {
                         Canvas.SetLeft(lab, groupleft + groupwidth + 25);
                         Canvas.SetTop(lab, groupbottom - grouptop);
-                        lastgroup.ornamentPosition = "right";
+                        //lastgroup.ornamentPosition = "right";
                     }
                     //add to canvas
                     lab.AccessKey = Convert.ToString(lastgroup.id);
                     Canvas parent = (Canvas)element.Parent;
                     parent.Children.Add(lab);
-
-                    lastgroup.ornament = lab;
-                    lastgroup.ornaments.Add(lab);
-                    lastgroup.ornamentPositions.Add(position);
-
                 }
                 //else ornament add to element
                 else
                 {
-                    string ornamentPosition;
+                    //string ornamentPosition;
                     if (position == "top")
                     {
                         Canvas.SetLeft(lab, element.ActualOffset.X);
                         Canvas.SetTop(lab, element.ActualOffset.Y - 25);
-                        ornamentPosition = "top";
+                        //ornamentPosition = "top";
                     }
                     else if (position == "bottom")
                     {
                         Canvas.SetLeft(lab, element.ActualOffset.X);
                         Canvas.SetTop(lab, element.ActualOffset.Y + element.Height + 25);
-                        ornamentPosition = "bottom";
+                        //ornamentPosition = "bottom";
                     }
                     else if (position == "left")
                     {
                         Canvas.SetLeft(lab, element.ActualOffset.X - 25);
                         Canvas.SetTop(lab, element.ActualOffset.Y);
-                        ornamentPosition = "left";
+                        //ornamentPosition = "left";
                     }
                     else if (position == "right")
                     {
                         Canvas.SetLeft(lab, element.ActualOffset.X + element.Width + 25);
                         Canvas.SetTop(lab, element.ActualOffset.Y);
-                        ornamentPosition = "right";
+                        //ornamentPosition = "right";
                     }
                     //add to canvas
                     lab.AccessKey = Convert.ToString(element.AccessKey);
                     Canvas parent = (Canvas)element.Parent;
                     parent.Children.Add(lab);
                 }
-                invoker.drawnOrnaments.Add(lab);
-
-                int inc = 0;
-                //int num = 0;
-                foreach (Strategy component in invoker.drawnComponents)
+                //add to drawn
+                if (firstdraw ==false)
                 {
-                    FrameworkElement fetched = component.GetElement();
-                    if (fetched.AccessKey == element.AccessKey)
-                    {
-                        //num = inc;
-                        component.Add(lab,position);
-                    }
-                    inc++;
-                }
+                    invoker.drawnOrnaments.Add(lab);
+                }              
 
             }
-
-
 
         }
 
@@ -271,11 +210,6 @@ namespace tekenprogramma
             Repaint(invoker, paintSurface); //repaint
         }
 
-        public void SetOrnament()
-        {
-
-        }
-
         public void Repaint(Invoker invoker, Canvas paintSurface)
         {
             paintSurface.Children.Clear();
@@ -290,5 +224,80 @@ namespace tekenprogramma
         }
 
     }
+
+
+
+    //public void SetOrnament()
+    //{
+
+    //}
+
+    ////shape interface
+    //public interface IShapes
+    //{
+    //    void Draw();
+    //}
+
+    ////rectangle shape from shape interface
+    //public class RectangleShape : IShapes
+    //{
+    //    public void Draw()
+    //    {
+
+    //    }
+    //}
+
+    ////ellipse shape from shape interface
+    //public class EllipseShape : IShapes
+    //{
+    //    public void Draw()
+    //    {
+
+    //    }
+    //}
+
+    ////abstract shape decorator
+    //public abstract class ShapeDecorator : IShapes
+    //{
+    //    protected IShapes decoratedShape;
+
+    //    public ShapeDecorator(IShapes decoratedShape)
+    //    {
+    //        this.decoratedShape = decoratedShape;
+    //    }
+
+    //    public virtual void Draw()
+    //    {
+    //        decoratedShape.Draw();
+    //    }
+    //}
+
+    ////concrete decorator
+    //public class OrnamentedDecorator : ShapeDecorator
+    //{
+
+    //    public OrnamentedDecorator(IShapes decoratedShape) : base(decoratedShape)
+    //    //public OrnamentedDecorator(IShapes decoratedShape)
+    //    //public override void OrnamentedDecorator()
+    //    {
+    //        //base(decoratedShape);
+    //    }
+
+
+    //   public override void Draw()
+    //   {
+    //        decoratedShape.Draw();
+    //        //SetOrnament(decoratedShape,element,ornament,position,invoker);
+    //        SetOrnament(decoratedShape);
+    //   }
+
+    //    //private void SetOrnament(IShapes decoratedShape, FrameworkElement element, string ornament, string position, Invoker invoker)
+    //    private void SetOrnament(IShapes decoratedShape)
+    //    {
+
+    //    }
+    //}
+
+
 
 }

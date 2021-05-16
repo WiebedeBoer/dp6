@@ -30,13 +30,13 @@
     <AppXManifest Include="C:\Users\wiebe\Documents\patterns\dp6\tekenprogramma\bin\x86\Debug\Core\AppxManifest.xml">
       <PackagePath>AppxManifest.xml</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2021-05-15T20:59:17.161</Modified>
+      <Modified>2021-05-16T11:29:56.740</Modified>
     </AppXManifest>
   </ItemGroup>
   <ItemGroup>
     <AppxPackagedFile Include="C:\Users\wiebe\Documents\patterns\dp6\tekenprogramma\bin\x86\Debug\tekenprogramma.exe">
       <PackagePath>entrypoint\tekenprogramma.exe</PackagePath>
-      <Modified>2021-05-15T20:59:16.597</Modified>
+      <Modified>2021-05-16T11:29:55.861</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\wiebe\.nuget\packages\runtime.win10-x86.microsoft.netcore.universalwindowsplatform\6.2.3\runtimes\win10-x86\lib\uap10.0.15138\System.Runtime.dll">
       <PackagePath>System.Runtime.dll</PackagePath>
@@ -90,11 +90,11 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\wiebe\Documents\patterns\dp6\tekenprogramma\bin\x86\Debug\App.xbf">
       <PackagePath>App.xbf</PackagePath>
-      <Modified>2021-05-15T20:59:16.475</Modified>
+      <Modified>2021-05-16T11:29:55.720</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\wiebe\Documents\patterns\dp6\tekenprogramma\bin\x86\Debug\MainPage.xbf">
       <PackagePath>MainPage.xbf</PackagePath>
-      <Modified>2021-05-15T20:59:16.475</Modified>
+      <Modified>2021-05-16T11:29:55.721</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Program Files %28x86%29\Windows Kits\10\UnionMetadata\10.0.18362.0\Windows.winmd">
       <PackagePath>WinMetadata\Windows.winmd</PackagePath>
@@ -102,11 +102,11 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\wiebe\Documents\patterns\dp6\tekenprogramma\bin\x86\Debug\resources.pri">
       <PackagePath>resources.pri</PackagePath>
-      <Modified>2021-05-09T09:10:47.072</Modified>
+      <Modified>2021-05-16T11:06:00.560</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\wiebe\Documents\patterns\dp6\tekenprogramma\bin\x86\Debug\Core\tekenprogramma.exe">
       <PackagePath>tekenprogramma.exe</PackagePath>
-      <Modified>2021-05-15T20:59:17.157</Modified>
+      <Modified>2021-05-16T11:29:56.727</Modified>
     </AppxPackagedFile>
   </ItemGroup>
   <ItemGroup>

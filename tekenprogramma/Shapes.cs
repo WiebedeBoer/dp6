@@ -370,87 +370,8 @@ namespace tekenprogramma
                 }
             }
             return counter;
-        }
+        }       
 
-        //
-        //saving
-        //
-        public async void Saving(Canvas paintSurface, Invoker invoker)
-        {
-
-            try
-            {
-                string lines = "";
-                //ungrouped and drawn
-                foreach (FrameworkElement child in paintSurface.Children)
-                {
-                    int elmcheck = CheckInGroup(invoker, child); //see if already in group
-                    if (elmcheck == 0)
-                    {
-                        if (child is Rectangle)
-                        {
-                            //ornament
-                            //if (child.ornament.Text.Length > 5 && child.ornamentPosition.Length > 1)
-                            //{
-                            //    string ostr = "ornament " + child.ornamentPosition + " " + child.ornament.Text;
-                            //}
-                            //element
-                            double top = (double)child.GetValue(Canvas.TopProperty);
-                            double left = (double)child.GetValue(Canvas.LeftProperty);
-                            string str = "rectangle " + left + " " + top + " " + child.Width + " " + child.Height + "\n";
-                            lines += str;
-                        }
-                        else if (child is Ellipse)
-                        {
-                            //ornament
-                            //if (child.ornament.Text.Length > 5 && child.ornamentPosition.Length > 1)
-                            //{
-                            //    string ostr = "ornament " + child.ornamentPosition + " " + child.ornament.Text;
-                            //}
-                            //element
-                            double top = (double)child.GetValue(Canvas.TopProperty);
-                            double left = (double)child.GetValue(Canvas.LeftProperty);
-                            string str = "ellipse " + left + " " + top + " " + child.Width + " " + child.Height + "\n";
-                            lines += str;
-                        }
-                    }
-                }
-                //grouped and drawn
-                foreach (Group group in invoker.drawnGroups)
-                {
-                    //ornament
-                    if (group.ornament.Text.Length >5 && group.ornamentPosition.Length >1)
-                    {
-                        string ostr = "ornament " + group.ornamentPosition + " " + group.ornament.Text;
-                    }
-                    //group
-                    string gstr = group.Display(0, group);
-                    lines += gstr;
-                }
-                //create and write to file
-                Windows.Storage.StorageFolder storageFolder = Windows.Storage.ApplicationData.Current.LocalFolder;
-                Windows.Storage.StorageFile sampleFile = await storageFolder.CreateFileAsync("dp6data.txt", Windows.Storage.CreationCollisionOption.ReplaceExisting);
-                await Windows.Storage.FileIO.WriteTextAsync(sampleFile, lines);
-            }
-            //file errors
-            catch (System.IO.FileNotFoundException)
-            {
-                fileText = "File not found.";
-            }
-            catch (System.IO.FileLoadException)
-            {
-                fileText = "File Failed to load.";
-            }
-            catch (System.IO.IOException e)
-            {
-                fileText = "File IO error " + e;
-            }
-            catch (Exception err)
-            {
-                fileText = err.Message;
-            }
-
-        }
 
         //
         //loading
@@ -546,15 +467,16 @@ namespace tekenprogramma
                     {                     
                         FrameworkElement addToElement = invoker.drawnElements[ec];
                         OrnamentDecorator ornament = new OrnamentDecorator(addToElement.ActualOffset.X, addToElement.ActualOffset.Y, addToElement.Width, addToElement.Height);
-                        ornament.Draw(addToElement, line[2], line[1], invoker); //element, name, position, invoker
+                        //ornament.Draw(addToElement, line[2], line[1], invoker, false); //element, name, position, invoker
+                        ornament.SetOrnament(addToElement, line[2], line[1], invoker); //element, name, position, invoker
                     }
                     //add to group
                     else if(ge =="group")
-                    {
-                        
+                    {                      
                         FrameworkElement addToElement = null;
                         OrnamentDecorator ornament = new OrnamentDecorator(0,0,0,0);
-                        ornament.Draw(addToElement, line[2], line[1], invoker); //element, name, position, invoker
+                        //ornament.Draw(addToElement, line[2], line[1], invoker,false); //element, name, position, invoker
+                        ornament.SetOrnament(addToElement, line[2], line[1], invoker); //element, name, position, invoker
                     }
 
                 }
@@ -679,6 +601,89 @@ namespace tekenprogramma
         //get ornament of groups
         public void GetGroupsOrnaments(Canvas paintSurface, Invoker invoker)
         {
+
+        }
+        */
+
+        //
+        //saving
+        //
+
+        /*
+        public async void Saving(Canvas paintSurface, Invoker invoker)
+        {
+
+            try
+            {
+                string lines = "";
+                //ungrouped and drawn
+                foreach (FrameworkElement child in paintSurface.Children)
+                {
+                    int elmcheck = CheckInGroup(invoker, child); //see if already in group
+                    if (elmcheck == 0)
+                    {
+                        if (child is Rectangle)
+                        {
+                            //ornament
+                            //if (child.ornament.Text.Length > 5 && child.ornamentPosition.Length > 1)
+                            //{
+                            //    string ostr = "ornament " + child.ornamentPosition + " " + child.ornament.Text;
+                            //}
+                            //element
+                            double top = (double)child.GetValue(Canvas.TopProperty);
+                            double left = (double)child.GetValue(Canvas.LeftProperty);
+                            string str = "rectangle " + left + " " + top + " " + child.Width + " " + child.Height + "\n";
+                            lines += str;
+                        }
+                        else if (child is Ellipse)
+                        {
+                            //ornament
+                            //if (child.ornament.Text.Length > 5 && child.ornamentPosition.Length > 1)
+                            //{
+                            //    string ostr = "ornament " + child.ornamentPosition + " " + child.ornament.Text;
+                            //}
+                            //element
+                            double top = (double)child.GetValue(Canvas.TopProperty);
+                            double left = (double)child.GetValue(Canvas.LeftProperty);
+                            string str = "ellipse " + left + " " + top + " " + child.Width + " " + child.Height + "\n";
+                            lines += str;
+                        }
+                    }
+                }
+                //grouped and drawn
+                foreach (Group group in invoker.drawnGroups)
+                {
+                    //ornament
+                    if (group.ornament.Text.Length >5 && group.ornamentPosition.Length >1)
+                    {
+                        string ostr = "ornament " + group.ornamentPosition + " " + group.ornament.Text;
+                    }
+                    //group
+                    string gstr = group.Display(0, group);
+                    lines += gstr;
+                }
+                //create and write to file
+                Windows.Storage.StorageFolder storageFolder = Windows.Storage.ApplicationData.Current.LocalFolder;
+                Windows.Storage.StorageFile sampleFile = await storageFolder.CreateFileAsync("dp6data.txt", Windows.Storage.CreationCollisionOption.ReplaceExisting);
+                await Windows.Storage.FileIO.WriteTextAsync(sampleFile, lines);
+            }
+            //file errors
+            catch (System.IO.FileNotFoundException)
+            {
+                fileText = "File not found.";
+            }
+            catch (System.IO.FileLoadException)
+            {
+                fileText = "File Failed to load.";
+            }
+            catch (System.IO.IOException e)
+            {
+                fileText = "File IO error " + e;
+            }
+            catch (Exception err)
+            {
+                fileText = err.Message;
+            }
 
         }
         */
