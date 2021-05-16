@@ -605,6 +605,10 @@ namespace tekenprogramma
             }
         }
 
+        //
+        //miscellaneous
+        //
+
         //remove selected element by access key
         public void KeyNumber(FrameworkElement element, Invoker invoker)
         {

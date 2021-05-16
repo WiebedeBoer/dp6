@@ -45,7 +45,7 @@ namespace tekenprogramma
                     selectedgroup.movedElements.Add(madeElement);
                 }
             }
-
+            //sub groups
             if (selectedgroup.addedGroups.Count() > 0)
             {
                 foreach (Group subgroup in selectedgroup.addedGroups)
@@ -94,7 +94,7 @@ namespace tekenprogramma
                     selectedgroup.movedElements.Add(madeElement);
                 }
             }
-
+            //sub groups
             if (selectedgroup.addedGroups.Count() > 0)
             {
                 foreach (Group subgroup in selectedgroup.addedGroups)

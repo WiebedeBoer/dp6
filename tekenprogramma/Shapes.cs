@@ -41,6 +41,12 @@ namespace tekenprogramma
         public FrameworkElement nextelement; //next element
         public FrameworkElement selectedElement; //selected element
 
+        public List<FrameworkElement> drawnElements = new List<FrameworkElement>();
+        public List<FrameworkElement> removedElements = new List<FrameworkElement>();
+        public List<FrameworkElement> movedElements = new List<FrameworkElement>();
+        public List<FrameworkElement> selectElementsList = new List<FrameworkElement>();
+        public List<FrameworkElement> unselectElementsList = new List<FrameworkElement>();
+
         public IComponent prevcomponent;
         public IComponent nextcomponent;
 
