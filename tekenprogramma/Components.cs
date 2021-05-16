@@ -25,7 +25,8 @@ namespace tekenprogramma
     public interface IComponent
     {
         FrameworkElement Accept(IVisitor visitor, Invoker invoker, PointerRoutedEventArgs e, Canvas paintSurface, FrameworkElement selectedelement, Location location);
-        string Write(IWriter visitor, FrameworkElement element, Canvas paintSurface);
+        //string Write(IWriter visitor, FrameworkElement element, Canvas paintSurface);
+        string Write(IWriter visitor, FrameworkElement element, Canvas paintSurface, Shape shape);
 
         string ToString(double x, double y, double width, double height);
 
@@ -109,9 +110,11 @@ namespace tekenprogramma
             return madeElement;
         }
 
-        public override string Write(IWriter visitor, FrameworkElement element, Canvas paintSurface)
+        //public override string Write(IWriter visitor, FrameworkElement element, Canvas paintSurface)
+        public override string Write(IWriter visitor, FrameworkElement element, Canvas paintSurface, Shape shape)
         {
-            string str = visitor.WriteRectangleOrnament(this);
+            string str = visitor.WriteOrnament(shape);
+            //string str = visitor.WriteRectangleOrnament(this);
             str = str + visitor.WriteRectangle(this, element, paintSurface);
             return str;
         }
@@ -218,9 +221,11 @@ namespace tekenprogramma
             return str;
         }
 
-        public override string Write(IWriter visitor, FrameworkElement element, Canvas paintSurface)
+        //public override string Write(IWriter visitor, FrameworkElement element, Canvas paintSurface)
+        public override string Write(IWriter visitor, FrameworkElement element, Canvas paintSurface, Shape shape)
         {
-            string str = visitor.WriteEllipseOrnament(this);
+            //string str = visitor.WriteEllipseOrnament(this);
+            string str = visitor.WriteOrnament(shape);
             str = str + visitor.WriteEllipse(this, element, paintSurface);
             return str;
         }

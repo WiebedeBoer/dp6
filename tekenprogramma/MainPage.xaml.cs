@@ -8,7 +8,6 @@ using Windows.UI.Input;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
-//using System.Windows.Controls;
 using System.IO;
 using System.Text.RegularExpressions;
 
@@ -16,30 +15,16 @@ namespace tekenprogramma
 {
     public sealed partial class MainPage : Page
     {
-        string type = "Rectangle";
-        double cpx;
-        double cpy;
-        bool firstcp = true;
-        bool moving = false;
-        Rectangle backuprectangle;
-        Ellipse backupellipse;
+        string type = "Rectangle"; //type modus
         bool selecting = false; //selection modus
-        bool grouping = false;
-
-        public Invoker invoker = new Invoker();
-        public List<Shape> selectedShapesList = new List<Shape>();
+        bool grouping = false; //group modus
+        //invoker and selection
+        public Invoker invoker = new Invoker(); //invoker      
         public List<FrameworkElement> selectedElements = new List<FrameworkElement>(); //selected elements list
         public FrameworkElement selectedElement; //selected element
-
+        //ornament name and location
         string ornamentName = "ornament";
         string ornamentLoc = "top";
-
-        public Strategy strategy;
-
-        //public Strategy rectangleStrategy = RectangleStrategy.GetInstance();
-        //public Strategy ellipseStrategy = EllipseStrategy.GetInstance();
-        public Strategy rectangleStrategy = ConcreteComponentRectangle.GetInstance();
-        public Strategy ellipseStrategy = ConcreteComponentEllipse.GetInstance();
 
         public MainPage()
         {
@@ -66,7 +51,6 @@ namespace tekenprogramma
             //not canvas elements
             else
             {
-
                 selecting = false;
                 //move
                 if (type == "Move")
@@ -79,12 +63,10 @@ namespace tekenprogramma
                     {
                         MovingShape(sender, e);
                     }
-
                 }
                 //resize
                 else if (type == "Resize")
                 {
-
                     if (invoker.selectedGroups.Count() > 0)
                     {
                         ResizingGroup(sender, e);
@@ -248,15 +230,13 @@ namespace tekenprogramma
         {
             FrameworkElement button = e.OriginalSource as FrameworkElement;
             type = button.Name;
-
-            //Shape shape = new Shape(0,0, 50, 50);
-            OrnamentDecorator ornament = new OrnamentDecorator(selectedElement.ActualOffset.X, selectedElement.ActualOffset.Y, selectedElement.Width, selectedElement.Height);
-            ICommand place = new MakeOrnament(ornament, paintSurface, this.invoker, selectedElement, this.ornamentName, this.ornamentLoc);
-            this.invoker.Execute(place);
-
-            //create decorator
-            //OrnamentDecorator ornament = new OrnamentDecorator(selectedElement.ActualOffset.X, selectedElement.ActualOffset.Y, selectedElement.Width, selectedElement.Height);
-            //ornament.Draw(selectedElement, this.ornamentName, this.ornamentLoc, invoker);
+            if (this.ornamentName.Length >=5 && (this.ornamentLoc =="Top" || this.ornamentLoc =="top" || this.ornamentLoc == "Bottom" || this.ornamentLoc == "bottom" || this.ornamentLoc == "Right" || this.ornamentLoc == "right" || this.ornamentLoc == "Left" || this.ornamentLoc == "left"))
+            {
+                Shape shape = new Shape(0, 0, 50, 50);
+                OrnamentDecorator ornament = new OrnamentDecorator(shape);
+                ICommand place = new MakeOrnament(ornament, paintSurface, this.invoker, selectedElement, this.ornamentName, this.ornamentLoc);
+                this.invoker.Execute(place);
+            }
         }
 
         //group click
@@ -313,15 +293,31 @@ namespace tekenprogramma
 
         }
 
+        //for name
         private void Width_TextChanged(object sender, TextChangedEventArgs e)
         {
-
+            this.ornamentName = Width.Text;
         }
 
+        //for position
         private void Height_TextChanged(object sender, TextChangedEventArgs e)
         {
-
+            this.ornamentLoc = Height.Text;
         }
+
+        //public Strategy strategy;
+        //public List<Shape> selectedShapesList = new List<Shape>();
+        //public Strategy rectangleStrategy = RectangleStrategy.GetInstance();
+        //public Strategy ellipseStrategy = EllipseStrategy.GetInstance();
+        //public Strategy rectangleStrategy = ConcreteComponentRectangle.GetInstance();
+        //public Strategy ellipseStrategy = ConcreteComponentEllipse.GetInstance();
+
+        //double cpx;
+        //double cpy;
+        //bool firstcp = true;
+        //bool moving = false;
+        //Rectangle backuprectangle;
+        //Ellipse backupellipse;
 
     }
 }

@@ -17,8 +17,14 @@ using Windows.ApplicationModel.Activation;
 namespace tekenprogramma
 {
 
+
+
+
+
+
+
     //shape class
-    public class Shape : Baseshape
+    public class Shape : IDecoratorShape
     {
         public double x;
         public double y;
@@ -28,6 +34,9 @@ namespace tekenprogramma
         public Invoker invoker;
         public Canvas paintSurface;
 
+        public FrameworkElement madeelement; //made element
+        public string type; //made type
+
         public FrameworkElement prevelement; //prev element
         public FrameworkElement nextelement; //next element
         public FrameworkElement selectedElement; //selected element
@@ -35,11 +44,18 @@ namespace tekenprogramma
         public IComponent prevcomponent;
         public IComponent nextcomponent;
 
+        public List<TextBlock> ornaments = new List<TextBlock>();
+        public List<TextBlock> removedOrnaments = new List<TextBlock>();
+        public List<string> ornamentNames = new List<string>();
+        public List<string> remvedOrnamentNames = new List<string>();
+        public List<string> ornamentPositions = new List<string>();
+        public List<string> removedOrnamentPositions = new List<string>();
+
         //file IO
         public string fileText { get; set; }
 
         //shape
-        public Shape(double x, double y, double width, double height) : base(height, width, x, y)
+        public Shape(double x, double y, double width, double height) 
         {
             this.x = x;
             this.y = y;
@@ -47,10 +63,18 @@ namespace tekenprogramma
             this.height = height;
         }
 
-        public override void Execute()
+        public Shape Execute()
         {
-            throw new NotImplementedException();
+            return this;
         }
+
+        public Group Fetch()
+        {
+            return null;
+        }
+
+        public void Draw() { }
+        public void Add(string position, string name) { }
 
         // Selects the shape
         public void Select(Invoker invoker, PointerRoutedEventArgs e, Canvas paintSurface)
@@ -128,6 +152,9 @@ namespace tekenprogramma
             Strategy component = ConcreteComponentRectangle.GetInstance();
             component.Element(newRectangle);
             invoker.drawnComponents.Add(component);
+
+            this.madeelement = newRectangle;
+            invoker.drawnShapes.Add(this);
         }
 
         //create ellipse
@@ -149,6 +176,9 @@ namespace tekenprogramma
             Strategy component = ConcreteComponentEllipse.GetInstance();
             component.Element(newEllipse);
             invoker.drawnComponents.Add(component);
+
+            this.madeelement = newEllipse;
+            invoker.drawnShapes.Add(this);
         }
 
         //
@@ -380,17 +410,24 @@ namespace tekenprogramma
         {
             //clear previous canvas
             paintSurface.Children.Clear();
-            //clear invoker
+            //clear elements
             invoker.drawnElements.Clear();
             invoker.removedElements.Clear();
             invoker.movedElements.Clear();
             invoker.selectElementsList.Clear();
             invoker.unselectElementsList.Clear();
+            //clear groups
             invoker.drawnGroups.Clear();
             invoker.removedGroups.Clear();
             invoker.movedGroups.Clear();
             invoker.selectedGroups.Clear();
             invoker.unselectedGroups.Clear();
+            //clear components
+            invoker.drawnComponents.Clear();
+            invoker.removedComponents.Clear();
+            invoker.movedComponents.Clear();
+            //invoker.selectComponentsList.Clear();
+            //invoker.unselectComponentsList.Clear();
             invoker.executer = 0;
             invoker.counter = 0;
             //read file
@@ -437,7 +474,7 @@ namespace tekenprogramma
             int gc = invoker.drawnGroups.Count();
             string ge = "";
             //foreach (string s in readText)
-            for (int inc = readText.Count() - 1; inc > 0; inc--)
+            for (int inc = readText.Count() - 1; inc >=0; inc--)
             {
                 string s = readText[inc];
                 string notabs = s.Replace("\t", "");
@@ -466,17 +503,23 @@ namespace tekenprogramma
                     if (ge =="element")
                     {                     
                         FrameworkElement addToElement = invoker.drawnElements[ec];
-                        OrnamentDecorator ornament = new OrnamentDecorator(addToElement.ActualOffset.X, addToElement.ActualOffset.Y, addToElement.Width, addToElement.Height);
-                        //ornament.Draw(addToElement, line[2], line[1], invoker, false); //element, name, position, invoker
-                        ornament.SetOrnament(addToElement, line[2], line[1], invoker); //element, name, position, invoker
+                        //OrnamentDecorator ornament = new OrnamentDecorator(addToElement.ActualOffset.X, addToElement.ActualOffset.Y, addToElement.Width, addToElement.Height);
+                        Shape shape = invoker.drawnShapes[ec];
+                        OrnamentDecorator ornament = new OrnamentDecorator(shape);
+                        ICommand place = new MakeOrnament(ornament, paintSurface, invoker, addToElement, line[2], line[1]);
+                        invoker.Execute(place);
+
                     }
                     //add to group
                     else if(ge =="group")
-                    {                      
-                        FrameworkElement addToElement = null;
-                        OrnamentDecorator ornament = new OrnamentDecorator(0,0,0,0);
-                        //ornament.Draw(addToElement, line[2], line[1], invoker,false); //element, name, position, invoker
-                        ornament.SetOrnament(addToElement, line[2], line[1], invoker); //element, name, position, invoker
+                    {
+                        //FrameworkElement addToElement = null;
+                        FrameworkElement addToElement = invoker.drawnElements[ec];
+                        //OrnamentDecorator ornament = new OrnamentDecorator(addToElement.ActualOffset.X, addToElement.ActualOffset.Y, addToElement.Width, addToElement.Height);
+                        Group group = invoker.drawnGroups[gc];
+                        OrnamentDecorator ornament = new OrnamentDecorator(group);
+                        ICommand place = new MakeOrnament(ornament, paintSurface, invoker, addToElement, line[2], line[1]);
+                        invoker.Execute(place);
                     }
 
                 }
@@ -591,6 +634,41 @@ namespace tekenprogramma
 
         }
 
+        //re attach subgroups to group
+        public void GetSubGroups(string[] readText, int group, int depth, int start, int stop, Invoker invoker)
+        {
+            Group maingroup = invoker.drawnGroups[group];
+            while (start < stop)
+            {
+                string s = readText[start];
+                string notabs = s.Replace("\t", "");
+                string tab = "\t";
+                int tablength = tab.Length;
+                int notablength = notabs.Length;
+                int slength = s.Length;
+                int subdepth = (slength - notablength) / tablength;
+
+                if (subdepth == (depth + 1))
+                {
+                    string[] line = Regex.Split(notabs, "\\s+");
+                    if (line[0] == "group")
+                    {
+                        group++;
+                        Group subgroup = invoker.drawnGroups[group];
+                        maingroup.addedGroups.Add(subgroup);
+                        invoker.drawnGroups.RemoveAt(group);
+
+                        GetSubGroups(readText, group, depth + 1, start, start + Convert.ToInt32(line[1]), invoker);
+                    }
+                    start++;
+                }
+            }
+        }
+
+
+
+
+
         /*
         //get ornaments of elements
         public void GetElementsOrnaments(Canvas paintSurface, Invoker invoker)
@@ -688,36 +766,7 @@ namespace tekenprogramma
         }
         */
 
-        //re attach subgroups to group
-        public void GetSubGroups(string[] readText, int group, int depth, int start, int stop, Invoker invoker)
-        {
-            Group maingroup = invoker.drawnGroups[group];
-            while (start < stop)
-            {
-                string s = readText[start];
-                string notabs = s.Replace("\t", "");
-                string tab = "\t";
-                int tablength = tab.Length;
-                int notablength = notabs.Length;
-                int slength = s.Length;
-                int subdepth = (slength - notablength) / tablength;
 
-                if (subdepth == (depth + 1))
-                {
-                    string[] line = Regex.Split(notabs, "\\s+");
-                    if (line[0] == "group")
-                    {
-                        group++;
-                        Group subgroup = invoker.drawnGroups[group];
-                        maingroup.addedGroups.Add(subgroup);
-                        invoker.drawnGroups.RemoveAt(group);
-
-                        GetSubGroups(readText, group, depth + 1, start, start + Convert.ToInt32(line[1]), invoker);
-                    }
-                    start++;
-                }
-            }
-        }
 
     }
 

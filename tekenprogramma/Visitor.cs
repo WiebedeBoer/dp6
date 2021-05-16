@@ -114,15 +114,6 @@ namespace tekenprogramma
         }
     }
 
-
-
-
-
-
-
-
-
-
     //visitor interface
     public interface IVisitor
     {
@@ -279,8 +270,11 @@ namespace tekenprogramma
                     if (child is Rectangle || child is Ellipse)
                     {
                         IComponent component = invoker.drawnComponents[i];
+                        //IDecoratorShape shape = invoker.drawnShapes[i];
+                        Shape shape = invoker.drawnShapes[i];
                         //IWriter visitor = new ConcreteVisitorWrite();
-                        string str = component.Write(visitor, child, paintSurface);
+                        //string str = component.Write(visitor, child, paintSurface);
+                        string str = component.Write(visitor, child, paintSurface, shape);
                         lines += str;
                     }
                 }
@@ -322,7 +316,7 @@ namespace tekenprogramma
                     
                     foreach (string name in group.ornamentNames)
                     {
-                        str = str + "ornament " + group.ornamentPositions[o] + " " +name;
+                        str = str + "ornament " + group.ornamentPositions[o] + " " +name + "\n";
                         o++;
                     }
                 }
@@ -340,6 +334,7 @@ namespace tekenprogramma
                         foreach (IComponent component in group.drawnComponents)
                         {
                             FrameworkElement child = group.drawnElements[j];
+                            Shape shape = group.drawnShapes[i];
                             j++;
                             //add tabs.
                             int k = 0;
@@ -348,7 +343,8 @@ namespace tekenprogramma
                                 str += "\t";
                                 k++;
                             }
-                            str = str + component.Write(visitor, child, paintSurface);
+                            //str = str + component.Write(visitor, child, paintSurface);
+                            str = str + component.Write(visitor, child, paintSurface, shape);
                         }
                     }
                     if (group.addedGroups.Count() > 0 && newdepth <= maxdepth)
@@ -440,9 +436,10 @@ namespace tekenprogramma
         string WriteRectangle(ConcreteComponentRectangle component, FrameworkElement element, Canvas paintSurface);
         string WriteEllipse(ConcreteComponentEllipse component, FrameworkElement element, Canvas paintSurface);
 
-        string WriteRectangleOrnament(ConcreteComponentRectangle component);
+        //string WriteRectangleOrnament(ConcreteComponentRectangle component);
 
-        string WriteEllipseOrnament(ConcreteComponentEllipse component);
+        //string WriteEllipseOrnament(ConcreteComponentEllipse component);
+        string WriteOrnament(Shape shape);
     }
 
     //concrete writer class
@@ -467,37 +464,53 @@ namespace tekenprogramma
         }
 
         //ornament lines
-        public string WriteRectangleOrnament(ConcreteComponentRectangle component)
+        public string WriteOrnament(Shape shape)
         {
             string str = "";
-
-            if (component.ornamentNames.Count() >0)
+            if (shape.ornamentNames.Count() >0)
             {
                 int i = 0;
-                foreach (string name in component.ornamentNames)
+                foreach (string name in shape.ornamentNames)
                 {
-                    str = str + "ornament " + component.ornamentPositions[i] + " " + name + "\n";
+                    str = str + "ornament " + shape.ornamentPositions[i] + " " + name + "\n";
                     i++;
                 }
             }
             return str;
         }
 
-        public string WriteEllipseOrnament(ConcreteComponentEllipse component)
-        {
-            string str = "";
 
-            if (component.ornamentNames.Count() > 0)
-            {
-                int i = 0;
-                foreach (string name in component.ornamentNames)
-                {
-                    str = str + "ornament " + component.ornamentPositions[i] + " " + name + "\n";
-                    i++;
-                }
-            }
-            return str;
-        }
+        //public string WriteRectangleOrnament(ConcreteComponentRectangle component)
+        //{
+        //    string str = "";
+
+        //    if (component.ornamentNames.Count() >0)
+        //    {
+        //        int i = 0;
+        //        foreach (string name in component.ornamentNames)
+        //        {
+        //            str = str + "ornament " + component.ornamentPositions[i] + " " + name + "\n";
+        //            i++;
+        //        }
+        //    }
+        //    return str;
+        //}
+
+        //public string WriteEllipseOrnament(ConcreteComponentEllipse component)
+        //{
+        //    string str = "";
+
+        //    if (component.ornamentNames.Count() > 0)
+        //    {
+        //        int i = 0;
+        //        foreach (string name in component.ornamentNames)
+        //        {
+        //            str = str + "ornament " + component.ornamentPositions[i] + " " + name + "\n";
+        //            i++;
+        //        }
+        //    }
+        //    return str;
+        //}
 
     }
 

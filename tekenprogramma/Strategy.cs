@@ -22,7 +22,8 @@ namespace tekenprogramma
         }
 
         public abstract FrameworkElement Accept(IVisitor visitor, Invoker invoker, PointerRoutedEventArgs e, Canvas paintSurface, FrameworkElement selectedelement, Location location);
-        public abstract string Write(IWriter visitor, FrameworkElement element, Canvas paintSurface);
+        //public abstract string Write(IWriter visitor, FrameworkElement element, Canvas paintSurface);
+        public abstract string Write(IWriter visitor, FrameworkElement element, Canvas paintSurface, Shape shape);
 
         public abstract string ToString(double x, double y, double width, double height);
 

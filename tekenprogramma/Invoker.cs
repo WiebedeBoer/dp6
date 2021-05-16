@@ -23,8 +23,9 @@ namespace tekenprogramma
         public List<FrameworkElement> selectElementsList = new List<FrameworkElement>();
         public List<FrameworkElement> unselectElementsList = new List<FrameworkElement>();
 
-        //public List<FrameworkElement> groupedElementsList = new List<FrameworkElement>();
-        //public List<FrameworkElement> ungroupedElementsList = new List<FrameworkElement>();
+        public List<Shape> drawnShapes = new List<Shape>();
+        public List<Shape> removedShapes = new List<Shape>();
+        public List<Shape> movedShapes = new List<Shape>();
 
         public List<Group> drawnGroups = new List<Group>();
         public List<Group> removedGroups = new List<Group>();
@@ -35,8 +36,6 @@ namespace tekenprogramma
         public List<IComponent> drawnComponents = new List<IComponent>();
         public List<IComponent> removedComponents = new List<IComponent>();
         public List<IComponent> movedComponents = new List<IComponent>();
-        public List<IComponent> selectComponentsList = new List<IComponent>();
-        public List<IComponent> unselectComponentsList = new List<IComponent>();
 
         public int counter = 0;
         public int executer = 0;
@@ -104,10 +103,17 @@ namespace tekenprogramma
 
     }
 
+    //public List<IComponent> selectComponentsList = new List<IComponent>();
+    //public List<IComponent> unselectComponentsList = new List<IComponent>();
 
+
+    //public List<Shape> selectShapes = new List<Shape>();
+    //public List<Shape> unselectShapes = new List<Shape>();
+
+    //public List<FrameworkElement> groupedElementsList = new List<FrameworkElement>();
+    //public List<FrameworkElement> ungroupedElementsList = new List<FrameworkElement>();
     //public List<Canvas> canvases = new List<Canvas>();
     //public List<Canvas> removedcanvases = new List<Canvas>();
-
     //public List<Canvas> selectedCanvases = new List<Canvas>();
     //public List<Canvas> unselectedCanvases = new List<Canvas>();
 }

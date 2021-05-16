@@ -9,25 +9,58 @@ using Windows.UI.Xaml.Controls;
 namespace tekenprogramma
 {
 
-    public class Decorator : Baseshape
+    public abstract class Decorator : IDecoratorShape
     {
-        protected Baseshape component;
+        protected IDecoratorShape decoshape;
 
         //public Decorator(double x, double y, double width, double height) : base(x, y, width, height)
         //{
 
         //}
 
-        public Decorator(double x, double y, double width, double height) : base(x, y, width, height)
+        public Decorator(IDecoratorShape decoshape) 
         {
-
+            this.decoshape = decoshape;
         }
 
-        public override void Execute()
+        public Shape Execute()
         {
-            if (component != null)
+            if (decoshape != null)
             {
-                component.Execute();
+                Shape shape = decoshape.Execute();
+                return shape;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public Group Fetch()
+        {
+            if (decoshape != null)
+            {
+                Group group = decoshape.Fetch();
+                return group;
+            }
+            else
+            {
+                return null;
+            }        
+        }
+
+        public void Draw() 
+        {
+            if (decoshape != null)
+            {
+                decoshape.Draw();
+            }
+        }
+        public void Add(string position, string name) 
+        {
+            if (decoshape != null)
+            {
+                decoshape.Add(position, name);
             }
         }
     }
@@ -41,7 +74,7 @@ namespace tekenprogramma
 
         //}
 
-        public OrnamentDecorator(double x, double y, double width, double height) : base(x, y, width, height)
+        public OrnamentDecorator(IDecoratorShape decoshape) : base(decoshape)
         {
 
         }
@@ -53,7 +86,7 @@ namespace tekenprogramma
             {
                 string gs = ornament.Substring(0, 5);
                 //if ornament add to goup
-                if (gs == "groep" || gs == "group")
+                if (gs == "groep" || gs == "group" || gs == "Groep" || gs == "Group")
                 {
                     Group lastgroup = invoker.selectedGroups.Last();
                     lastgroup.Add(position, ornament);
@@ -61,17 +94,19 @@ namespace tekenprogramma
                 //else ornament add to element
                 else
                 {
-                    int inc = 0;
+                    //int inc = 0;
                     //int num = 0;
-                    foreach (Strategy component in invoker.drawnComponents)
+                    //foreach (IComponent component in invoker.drawnComponents)
+                    foreach (Shape shape in invoker.drawnShapes)
                     {
-                        FrameworkElement fetched = component.GetElement();
+                        FrameworkElement fetched = shape.madeelement;
                         if (fetched.AccessKey == element.AccessKey)
                         {
                             //num = inc;
-                            component.Add(position, ornament);
+                            //component.Add(shape, position, ornament);
+                            Add(shape, position, ornament);
                         }
-                        inc++;
+                        //inc++;
                     }
                 }
                 //draw
@@ -79,15 +114,22 @@ namespace tekenprogramma
             }
         }
 
+        public void Add(IDecoratorShape decoshape, string position, string ornament)
+        {
+            Shape shape = decoshape.Execute();
+            shape.ornamentPositions.Add(position);
+            shape.ornamentNames.Add(ornament);
+        }
+
         public void Draw(FrameworkElement element, string ornament, string position, Invoker invoker, bool firstdraw)
         {
             TextBlock lab = new TextBlock();
             lab.Text = ornament;
-            if (ornament.Length >5)
+            if (ornament.Length >=5)
             {
                 string gs = lab.Text.Substring(0, 5);
                 //if ornament add to goup.
-                if (gs == "groep" || gs =="group")
+                if (gs == "groep" || gs == "group" || gs == "Groep" || gs == "Group")
                 {
                     Group lastgroup = invoker.selectedGroups.Last();
                     //group size variables.
@@ -120,29 +162,25 @@ namespace tekenprogramma
                         }
                     }
                     //set position
-                    if (position == "top")
+                    if (position == "top" || position == "Top")
                     {
                         Canvas.SetLeft(lab, groupright - groupleft);
                         Canvas.SetTop(lab, grouptop - 25);
-                        //lastgroup.ornamentPosition = "top";
                     }
-                    else if (position == "bottom")
+                    else if (position == "bottom" || position == "Bottom")
                     {
                         Canvas.SetLeft(lab, groupright - groupleft);
                         Canvas.SetTop(lab, grouptop + groupheight + 25);
-                        //lastgroup.ornamentPosition = "bottom";
                     }
-                    else if (position == "left")
+                    else if (position == "left" || position == "Left")
                     {
                         Canvas.SetLeft(lab, groupleft - 25);
                         Canvas.SetTop(lab, groupbottom - grouptop);
-                        //lastgroup.ornamentPosition = "left";
                     }
-                    else if (position == "right")
+                    else if (position == "right" || position == "Right")
                     {
                         Canvas.SetLeft(lab, groupleft + groupwidth + 25);
                         Canvas.SetTop(lab, groupbottom - grouptop);
-                        //lastgroup.ornamentPosition = "right";
                     }
                     //add to canvas
                     lab.AccessKey = Convert.ToString(lastgroup.id);
@@ -153,29 +191,25 @@ namespace tekenprogramma
                 else
                 {
                     //string ornamentPosition;
-                    if (position == "top")
+                    if (position == "top" || position =="Top")
                     {
                         Canvas.SetLeft(lab, element.ActualOffset.X);
                         Canvas.SetTop(lab, element.ActualOffset.Y - 25);
-                        //ornamentPosition = "top";
                     }
-                    else if (position == "bottom")
+                    else if (position == "bottom" || position == "Bottom")
                     {
                         Canvas.SetLeft(lab, element.ActualOffset.X);
                         Canvas.SetTop(lab, element.ActualOffset.Y + element.Height + 25);
-                        //ornamentPosition = "bottom";
                     }
-                    else if (position == "left")
+                    else if (position == "left" || position == "Left")
                     {
                         Canvas.SetLeft(lab, element.ActualOffset.X - 25);
                         Canvas.SetTop(lab, element.ActualOffset.Y);
-                        //ornamentPosition = "left";
                     }
-                    else if (position == "right")
+                    else if (position == "right" || position == "Right")
                     {
                         Canvas.SetLeft(lab, element.ActualOffset.X + element.Width + 25);
                         Canvas.SetTop(lab, element.ActualOffset.Y);
-                        //ornamentPosition = "right";
                     }
                     //add to canvas
                     lab.AccessKey = Convert.ToString(element.AccessKey);
@@ -197,7 +231,6 @@ namespace tekenprogramma
             TextBlock lastlab = invoker.drawnOrnaments.Last();
             invoker.removedOrnaments.Add(lastlab);
             invoker.drawnOrnaments.RemoveAt(invoker.drawnOrnaments.Count() -1);
-
             Repaint(invoker, paintSurface); //repaint
         }
 
@@ -206,10 +239,14 @@ namespace tekenprogramma
             TextBlock lastlab = invoker.removedOrnaments.Last();
             invoker.drawnOrnaments.Add(lastlab);
             invoker.removedOrnaments.RemoveAt(invoker.removedOrnaments.Count() - 1);
-
             Repaint(invoker, paintSurface); //repaint
         }
 
+        //
+        //repaint
+        //
+
+        //repaint
         public void Repaint(Invoker invoker, Canvas paintSurface)
         {
             paintSurface.Children.Clear();

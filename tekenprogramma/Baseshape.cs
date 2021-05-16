@@ -12,6 +12,16 @@ using System.Text.RegularExpressions;
 
 namespace tekenprogramma
 {
+    
+    public interface IDecoratorShape
+    {
+        Shape Execute();
+
+        Group Fetch();
+        void Draw();
+        void Add(string position, string name);
+    }
+    
     public abstract class Baseshape
     {
         public double height;
@@ -68,5 +78,8 @@ namespace tekenprogramma
         //public abstract bool GetHandleIfSelected(double x, double y);
 
         public abstract void Execute();
+
+        public abstract void Draw();
+        public abstract void Add();
     }
 }

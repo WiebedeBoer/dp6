@@ -36,7 +36,7 @@ namespace tekenprogramma
     }
 
     //class group
-    public class Group : Baseshape
+    public class Group : IDecoratorShape
     {
         public double height;
         public double width;
@@ -56,6 +56,12 @@ namespace tekenprogramma
         public List<FrameworkElement> drawnElements = new List<FrameworkElement>();
         public List<FrameworkElement> removedElements = new List<FrameworkElement>();
         public List<FrameworkElement> movedElements = new List<FrameworkElement>();
+
+        public List<Shape> drawnShapes = new List<Shape>();
+        public List<Shape> removedShapes = new List<Shape>();
+        public List<Shape> movedShapes = new List<Shape>();
+        public List<Shape> selectShapes = new List<Shape>();
+        public List<Shape> unselectShapes = new List<Shape>();
 
         public List<Group> addedGroups = new List<Group>();
         public List<Group> movedGroups = new List<Group>();
@@ -78,7 +84,7 @@ namespace tekenprogramma
         public List<string> ornamentPositions = new List<string>();
         public List<string> removedOrnamentPositions = new List<string>();
 
-        public Group(double x, double y, double width, double height, string type, int depth, int id, Canvas selectedCanvas, Invoker invoker, FrameworkElement element) : base(x, y, width, height)
+        public Group(double x, double y, double width, double height, string type, int depth, int id, Canvas selectedCanvas, Invoker invoker, FrameworkElement element)
         {
             this.height = height;
             this.width = width;
@@ -92,7 +98,17 @@ namespace tekenprogramma
             this.element = element;
         }
 
-        public override void Execute(){}
+        public Group Fetch()
+        {
+            return this;
+        }
+        public void Draw() { }
+
+        public Shape Execute()
+        {
+            Shape shape = this.drawnShapes.Last();
+            return shape;
+        }
 
         //public void Add(TextBlock lab, string position, string name)
         public void Add(string position, string name)
@@ -112,7 +128,7 @@ namespace tekenprogramma
         //make new group
         public void MakeGroup(Group group, Canvas selectedCanvas, Invoker invoker)
         {
-
+            //depth
             int newdepth = 0;
             if (invoker.selectElementsList.Count() > 0)
             {
@@ -124,7 +140,7 @@ namespace tekenprogramma
                     //if (invoker.selectElementsList.Count() > 0)
                     //{
                     //FrameworkElement elm = invoker.selectElementsList[index];
-                    elm.Opacity = 0.9;
+                    elm.Opacity = 0.8;
                     //check if selected is not already grouped element
                     int elmcheck = CheckInGroup(invoker, elm);
                     if (elmcheck == 0)
@@ -137,6 +153,9 @@ namespace tekenprogramma
                             //IComponent rectangle = new ConcreteComponentRectangle(elm.ActualOffset.X, elm.ActualOffset.Y, elm.Width, elm.Height);
                             //this.drawnComponents.Add(rectangle);
                             this.drawnComponents.Add(component);
+                            //Shape shape = new Shape(elm.ActualOffset.X, elm.ActualOffset.Y, elm.Width, elm.Height);
+                            Shape shape = SelectInShape(elm);
+                            this.drawnShapes.Add(shape);
                         }
                         else if (elm.Name == "Ellipse")
                         {
@@ -144,6 +163,9 @@ namespace tekenprogramma
                             //IComponent ellipse = new ConcreteComponentEllipse(elm.ActualOffset.X, elm.ActualOffset.Y, elm.Width, elm.Height);
                             //this.drawnComponents.Add(ellipse);
                             this.drawnComponents.Add(component);
+                            //Shape shape = new Shape(elm.ActualOffset.X, elm.ActualOffset.Y, elm.Width, elm.Height);
+                            Shape shape = SelectInShape(elm);
+                            this.drawnShapes.Add(shape);
                         }
 
                     }
@@ -154,9 +176,10 @@ namespace tekenprogramma
 
 
                 }
+                //clear selected elements
                 invoker.selectElementsList.Clear();
             }
-            
+            //add selected groups
             if (invoker.selectedGroups.Count() > 0)
             {
                 newdepth = 1;
@@ -173,12 +196,13 @@ namespace tekenprogramma
                         newdepth = newdepth + selectedgroup.depth;
                     }
                 }
-                invoker.selectedGroups.Clear();
-                
+                //clear selected groups
+                invoker.selectedGroups.Clear();                
             }
             this.depth = newdepth;
-            invoker.drawnGroups.Add(this);
             this.id = invoker.executer; //id
+            invoker.drawnGroups.Add(this);
+            //this.id = invoker.executer; //id
 
         }
 
@@ -427,6 +451,23 @@ namespace tekenprogramma
             }
         }
 
+        //
+        //selecting
+        //
+
+        //get the selected shape
+        public Shape SelectInShape(FrameworkElement selectedElement)
+        {
+            foreach (Shape shape in invoker.drawnShapes)
+            {
+                if (shape.madeelement.AccessKey == selectedElement.AccessKey)
+                {
+                    return shape;
+                }
+            }
+            return null;
+        }
+
         //check if element is already in group
         public int CheckInGroup(Invoker invoker, FrameworkElement element)
         {
@@ -472,9 +513,10 @@ namespace tekenprogramma
         }
 
         //see if element is in group and select the group
-        public void SelectInGroup(FrameworkElement selectedElement, Invoker invoker)
+        public bool SelectInGroup(FrameworkElement selectedElement, Invoker invoker)
         {
             string key = selectedElement.AccessKey;
+            bool ingroup = false;
             if (invoker.drawnGroups.Count() > 0)
             {
                 foreach (Group group in invoker.drawnGroups)
@@ -486,6 +528,8 @@ namespace tekenprogramma
                             if (drawn.AccessKey == key)
                             {
                                 invoker.selectedGroups.Add(group);
+                                ingroup = true;
+                                
                                 ////remove selected element from list if in group
                                 //if (invoker.selectElementsList.Count() >0)
                                 //{
@@ -497,6 +541,7 @@ namespace tekenprogramma
                     SelectInGroupHandle(invoker, key, group); //subgroup recursive
                 }
             }
+            return ingroup;
         }
 
         //recursively see if element is in subgroup and select the group
