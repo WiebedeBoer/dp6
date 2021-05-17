@@ -124,7 +124,8 @@ namespace tekenprogramma
         public override FrameworkElement Execute(double x, double y, double width, double height, FrameworkElement g, bool selected, Invoker invoker)
         {
             Rectangle newRectangle = new Rectangle(); //instance of new rectangle shape
-            newRectangle.AccessKey = invoker.executer.ToString();
+            //newRectangle.AccessKey = invoker.executer.ToString();
+            newRectangle.AccessKey = g.AccessKey;
             newRectangle.Width = width; //set width
             newRectangle.Height = height; //set height     
             SolidColorBrush brush = new SolidColorBrush(); //brush
@@ -233,7 +234,8 @@ namespace tekenprogramma
         public override FrameworkElement Execute(double x, double y, double width, double height, FrameworkElement g, bool selected, Invoker invoker)
         {
             Ellipse newEllipse = new Ellipse(); //instance of new ellipse shape
-            newEllipse.AccessKey = invoker.executer.ToString();
+            //newEllipse.AccessKey = invoker.executer.ToString();
+            newEllipse.AccessKey = g.AccessKey;
             newEllipse.Width = width;
             newEllipse.Height = height;
             SolidColorBrush brush = new SolidColorBrush();//brush

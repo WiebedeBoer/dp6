@@ -123,17 +123,46 @@ namespace tekenprogramma
         //
         //repaint
         //
+
+        //repaint
         public void Repaint(Invoker invoker, Canvas paintSurface)
         {
             paintSurface.Children.Clear();
+            int i = 0;
             foreach (FrameworkElement drawelement in invoker.drawnElements)
             {
                 paintSurface.Children.Add(drawelement); //add
+                Shape shape = invoker.drawnShapes[i];
+                foreach (string ornament in shape.ornamentNames)
+                {
+                    OrnamentDecorator deco = new OrnamentDecorator(shape);
+                    deco.Draw(drawelement, ornament, shape.ornamentPositions[i], invoker, false);
+                    i++;
+                }
             }
-            foreach (FrameworkElement drawornament in invoker.drawnOrnaments)
+            FrameworkElement groupelement = null;
+            foreach (Group group in invoker.drawnGroups)
             {
-                paintSurface.Children.Add(drawornament); //add
+                foreach (string ornament in group.ornamentNames)
+                {
+                    OrnamentDecorator deco = new OrnamentDecorator(group);
+                    deco.Draw(groupelement, ornament, group.ornamentPositions[i], invoker, false);
+                }
             }
+            //foreach (FrameworkElement drawornament in invoker.drawnOrnaments)
+            //{
+            //    paintSurface.Children.Add(drawornament); //add
+            //}
+            //foreach (Shape shape in invoker.drawnShapes)
+            //{
+            //    int i = 0;
+            //    foreach (string ornament in shape.ornamentNames)
+            //    {
+            //        OrnamentDecorator deco = new OrnamentDecorator(shape);
+            //        deco.Draw(shape.madeelement, ornament, shape.ornamentPositions[i], invoker, false);
+            //        i++;
+            //    }
+            //}
         }
 
         //
@@ -154,7 +183,7 @@ namespace tekenprogramma
             Canvas.SetLeft(newRectangle, x); //set left position
             Canvas.SetTop(newRectangle, y); //set top position 
             invoker.drawnElements.Add(newRectangle);
-            Repaint(invoker, paintSurface); //repaint
+            
 
             Strategy component = ConcreteComponentRectangle.GetInstance();
             component.Element(newRectangle);
@@ -162,6 +191,8 @@ namespace tekenprogramma
 
             this.madeelement = newRectangle;
             invoker.drawnShapes.Add(this);
+
+            Repaint(invoker, paintSurface); //repaint
         }
 
         //create ellipse
@@ -178,7 +209,7 @@ namespace tekenprogramma
             Canvas.SetLeft(newEllipse, x);//set left position
             Canvas.SetTop(newEllipse, y);//set top position   
             invoker.drawnElements.Add(newEllipse);
-            Repaint(invoker, paintSurface); //repaint
+            
 
             Strategy component = ConcreteComponentEllipse.GetInstance();
             component.Element(newEllipse);
@@ -186,6 +217,8 @@ namespace tekenprogramma
 
             this.madeelement = newEllipse;
             invoker.drawnShapes.Add(this);
+
+            Repaint(invoker, paintSurface); //repaint
         }
 
         //
@@ -261,6 +294,14 @@ namespace tekenprogramma
                 returnelement = newEllipse;
             }
             this.movedElements.Add(returnelement);
+
+            //foreach (Shape shape in invoker.drawnShapes)
+            //{
+            //    if (shape.madeelement.AccessKey ==element.AccessKey)
+            //    {
+            //        shape.madeelement = returnelement;               
+            //    }
+            //}
             return returnelement;
         }
 
@@ -411,6 +452,14 @@ namespace tekenprogramma
                 returnelement = newEllipse;
             }
             this.movedElements.Add(returnelement);
+
+            //foreach (Shape shape in invoker.drawnShapes)
+            //{
+            //    if (shape.madeelement.AccessKey == element.AccessKey)
+            //    {
+            //        shape.madeelement = returnelement;
+            //    }
+            //}
             return returnelement;
         }
 

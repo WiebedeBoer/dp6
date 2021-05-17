@@ -254,9 +254,19 @@ namespace tekenprogramma
             {
                 paintSurface.Children.Add(drawelement); //add
             }
-            foreach (FrameworkElement drawornament in invoker.drawnOrnaments)
+            //foreach (FrameworkElement drawornament in invoker.drawnOrnaments)
+            //{
+            //    paintSurface.Children.Add(drawornament); //add
+            //}
+            foreach (Shape shape in invoker.drawnShapes)
             {
-                paintSurface.Children.Add(drawornament); //add
+                int i = 0;
+                foreach (string ornament in shape.ornamentNames)
+                {
+                    OrnamentDecorator deco = new OrnamentDecorator(shape);
+                    deco.Draw(shape.madeelement, ornament, shape.ornamentPositions[i], invoker, false);
+                    i++;
+                }
             }
         }
 
