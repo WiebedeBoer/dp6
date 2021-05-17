@@ -24,7 +24,8 @@ namespace tekenprogramma
         //The accept operation directs a call to the appropriate operation in the visitor object.
         public void Client(List<IComponent> components, List<FrameworkElement> drawnElements, Group selectedgroup, IVisitor visitor, Invoker invoker, PointerRoutedEventArgs e, Canvas paintSurface, FrameworkElement selectedelement)
         {
-            invoker.removedGroups.Add(selectedgroup);
+            invoker.unmovedGroups.Add(selectedgroup);
+            //invoker.removedGroups.Add(selectedgroup);
             //calculate difference in location
             double leftOffset = Convert.ToDouble(selectedelement.ActualOffset.X) - e.GetCurrentPoint(paintSurface).Position.X;
             double topOffset = Convert.ToDouble(selectedelement.ActualOffset.Y) - e.GetCurrentPoint(paintSurface).Position.Y;
@@ -70,7 +71,8 @@ namespace tekenprogramma
     {
         public void Client(List<IComponent> components, List<FrameworkElement> drawnElements, Group selectedgroup, IVisitor visitor, Invoker invoker, PointerRoutedEventArgs e, Canvas paintSurface, FrameworkElement selectedelement)
         {
-            invoker.removedGroups.Add(selectedgroup);
+            invoker.unmovedGroups.Add(selectedgroup);
+            //invoker.removedGroups.Add(selectedgroup);
             //calculate difference in size
             double newWidth = selectedgroup.ReturnSmallest(e.GetCurrentPoint(paintSurface).Position.X, Convert.ToDouble(selectedelement.ActualOffset.X));
             double newHeight = selectedgroup.ReturnSmallest(e.GetCurrentPoint(paintSurface).Position.Y, Convert.ToDouble(selectedelement.ActualOffset.Y));
@@ -184,8 +186,22 @@ namespace tekenprogramma
                 inc++;
             }
             invoker.drawnElements.RemoveAt(number);
-            invoker.removedElements.Add(element);
+            invoker.unmovedElements.Add(element);
             invoker.movedElements.Add(element);
+            //string key = element.AccessKey;
+            //int inc = 0;
+            //int number = 0;
+            //foreach (FrameworkElement drawn in invoker.drawnElements)
+            //{
+            //    if (drawn.AccessKey == key)
+            //    {
+            //        number = inc;
+            //    }
+            //    inc++;
+            //}
+            //invoker.drawnElements.RemoveAt(number);
+            //invoker.removedElements.Add(element);
+            //invoker.movedElements.Add(element);
         }
 
     }
@@ -248,8 +264,22 @@ namespace tekenprogramma
                 inc++;
             }
             invoker.drawnElements.RemoveAt(number);
-            invoker.removedElements.Add(element);
+            invoker.unmovedElements.Add(element);
             invoker.movedElements.Add(element);
+            //string key = element.AccessKey;
+            //int inc = 0;
+            //int number = 0;
+            //foreach (FrameworkElement drawn in invoker.drawnElements)
+            //{
+            //    if (drawn.AccessKey == key)
+            //    {
+            //        number = inc;
+            //    }
+            //    inc++;
+            //}
+            //invoker.drawnElements.RemoveAt(number);
+            //invoker.removedElements.Add(element);
+            //invoker.movedElements.Add(element);
         }
 
     }

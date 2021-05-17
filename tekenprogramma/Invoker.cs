@@ -20,6 +20,7 @@ namespace tekenprogramma
         public List<FrameworkElement> drawnElements = new List<FrameworkElement>();
         public List<FrameworkElement> removedElements = new List<FrameworkElement>();
         public List<FrameworkElement> movedElements = new List<FrameworkElement>();
+        public List<FrameworkElement> unmovedElements = new List<FrameworkElement>();
         public List<FrameworkElement> selectElementsList = new List<FrameworkElement>();
         public List<FrameworkElement> unselectElementsList = new List<FrameworkElement>();
 
@@ -30,6 +31,7 @@ namespace tekenprogramma
         public List<Group> drawnGroups = new List<Group>();
         public List<Group> removedGroups = new List<Group>();
         public List<Group> movedGroups = new List<Group>();
+        public List<Group> unmovedGroups = new List<Group>();
         public List<Group> selectedGroups = new List<Group>();
         public List<Group> unselectedGroups = new List<Group>();
 
@@ -70,6 +72,7 @@ namespace tekenprogramma
                 cmd.Undo();
                 counter--;
             }
+            //Repaint();
         }
 
         //redo
@@ -83,13 +86,15 @@ namespace tekenprogramma
                 cmd.Redo();
                 counter++;
             }
+            //Repaint();
         }
 
         //repaint
         public void Repaint()
         {
             //repaint actions
-            foreach (ICommand icmd in actionsList)
+            //foreach (ICommand icmd in actionsList)
+            foreach (ICommand icmd in this.actionsList)
             {
                 icmd.Execute();
             }

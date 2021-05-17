@@ -48,6 +48,16 @@ namespace tekenprogramma
         {
             this.shape.Add(this.invoker, this.paintSurface);
         }
+
+        //public void Undo()
+        //{
+
+        //}
+
+        //public void Redo()
+        //{
+
+        //}
     }
 
     //class make ellipse
@@ -82,6 +92,15 @@ namespace tekenprogramma
         {
             this.shape.Add(this.invoker, this.paintSurface);
         }
+        //public void Undo()
+        //{
+
+        //}
+
+        //public void Redo()
+        //{
+
+        //}
     }
 
     //class moving
@@ -105,30 +124,30 @@ namespace tekenprogramma
 
         public void Execute()
         {
-            //this.shape.Moving(this.invoker, this.paintSurface, this.location, this.element);
+            this.shape.Moving(this.invoker, this.paintSurface, this.location, this.element);
 
             //MoveClient mover = new MoveClient();
             //IVisitor visitor = new ConcreteVisitorMove();
             //Group selectedgroup = this.invoker.selectedGroups.Last();
             //mover.Client(selectedgroup.drawnComponents, selectedgroup.drawnElements, selectedgroup, visitor, this.invoker, this.e, this.paintSurface, this.element);
 
-            if (this.element.Name == "Rectangle")
-            {
-                IVisitor visitor = new ConcreteVisitorMove();
-                //ConcreteComponentRectangle component = new ConcreteComponentRectangle(this.location.x, this.location.y, this.location.width, this.location.height);
-                Strategy component = ConcreteComponentRectangle.GetInstance();
-                //ConcreteComponentRectangle component = Strategy.GetInstance();
-                visitor.VisitConcreteComponentRectangle(component, this.invoker, this.element, this.paintSurface, this.location);
-            }
-            else if (this.element.Name == "Ellipse")
-            {
-                IVisitor visitor = new ConcreteVisitorMove();
-                //ConcreteComponentEllipse component = new ConcreteComponentEllipse(this.location.x, this.location.y, this.location.width, this.location.height);
-                //ConcreteComponentEllipse component = ConcreteComponentEllipse.GetInstance();
-                Strategy component = ConcreteComponentEllipse.GetInstance();
-                visitor.VisitConcreteComponentEllipse(component, this.invoker, this.element, this.paintSurface, this.location);
-            }
-            this.shape.Repaint(this.invoker, this.paintSurface);
+            //if (this.element.Name == "Rectangle")
+            //{
+            //    IVisitor visitor = new ConcreteVisitorMove();
+            //    //ConcreteComponentRectangle component = new ConcreteComponentRectangle(this.location.x, this.location.y, this.location.width, this.location.height);
+            //    Strategy component = ConcreteComponentRectangle.GetInstance();
+            //    //ConcreteComponentRectangle component = Strategy.GetInstance();
+            //    visitor.VisitConcreteComponentRectangle(component, this.invoker, this.element, this.paintSurface, this.location);
+            //}
+            //else if (this.element.Name == "Ellipse")
+            //{
+            //    IVisitor visitor = new ConcreteVisitorMove();
+            //    //ConcreteComponentEllipse component = new ConcreteComponentEllipse(this.location.x, this.location.y, this.location.width, this.location.height);
+            //    //ConcreteComponentEllipse component = ConcreteComponentEllipse.GetInstance();
+            //    Strategy component = ConcreteComponentEllipse.GetInstance();
+            //    visitor.VisitConcreteComponentEllipse(component, this.invoker, this.element, this.paintSurface, this.location);
+            //}
+            //this.shape.Repaint(this.invoker, this.paintSurface);
         }
 
         public void Undo()
@@ -140,6 +159,15 @@ namespace tekenprogramma
         {
             this.shape.MoveAgain(this.invoker, this.paintSurface);
         }
+        //public void Undo()
+        //{
+
+        //}
+
+        //public void Redo()
+        //{
+
+        //}
     }
 
     //class resize
@@ -164,29 +192,29 @@ namespace tekenprogramma
 
         public void Execute()
         {
-            //this.shape.Resize(this.invoker, this.e, this.paintSurface, this.element);
+            this.shape.Resize(this.invoker, this.e, this.paintSurface, this.element);
 
             //ResizeClient resizer = new ResizeClient();
             //IVisitor visitor = new ConcreteVisitorResize();
             //Group selectedgroup = this.invoker.selectedGroups.Last();
             //resizer.Client(selectedgroup.drawnComponents, selectedgroup.drawnElements, selectedgroup, visitor, this.invoker, this.e, this.paintSurface, this.element);
 
-            if (this.element.Name == "Rectangle")
-            {
-                IVisitor visitor = new ConcreteVisitorResize();
-                //ConcreteComponentRectangle component = new ConcreteComponentRectangle(this.location.x, this.location.y, this.location.width, this.location.height);
-                Strategy component = ConcreteComponentRectangle.GetInstance();
-                //Strategy component = new ConcreteComponentRectangle(this.location.x, this.location.y, this.location.width, this.location.height);
-                visitor.VisitConcreteComponentRectangle(component, this.invoker, this.element, this.paintSurface, this.location);
-            }
-            else if (this.element.Name == "Ellipse")
-            {
-                IVisitor visitor = new ConcreteVisitorResize();
-                //ConcreteComponentEllipse component = new ConcreteComponentEllipse(this.location.x, this.location.y, this.location.width, this.location.height);
-                Strategy component = ConcreteComponentEllipse.GetInstance();
-                visitor.VisitConcreteComponentEllipse(component, this.invoker, this.element, this.paintSurface, this.location);
-            }
-            this.shape.Repaint(this.invoker, this.paintSurface);
+            //if (this.element.Name == "Rectangle")
+            //{
+            //    IVisitor visitor = new ConcreteVisitorResize();
+            //    //ConcreteComponentRectangle component = new ConcreteComponentRectangle(this.location.x, this.location.y, this.location.width, this.location.height);
+            //    Strategy component = ConcreteComponentRectangle.GetInstance();
+            //    //Strategy component = new ConcreteComponentRectangle(this.location.x, this.location.y, this.location.width, this.location.height);
+            //    visitor.VisitConcreteComponentRectangle(component, this.invoker, this.element, this.paintSurface, this.location);
+            //}
+            //else if (this.element.Name == "Ellipse")
+            //{
+            //    IVisitor visitor = new ConcreteVisitorResize();
+            //    //ConcreteComponentEllipse component = new ConcreteComponentEllipse(this.location.x, this.location.y, this.location.width, this.location.height);
+            //    Strategy component = ConcreteComponentEllipse.GetInstance();
+            //    visitor.VisitConcreteComponentEllipse(component, this.invoker, this.element, this.paintSurface, this.location);
+            //}
+            //this.shape.Repaint(this.invoker, this.paintSurface);
         }
 
         public void Undo()
@@ -198,6 +226,15 @@ namespace tekenprogramma
         {
             this.shape.MoveAgain(this.invoker, this.paintSurface);
         }
+        //public void Undo()
+        //{
+
+        //}
+
+        //public void Redo()
+        //{
+
+        //}
     }
 
     //class select
@@ -231,6 +268,15 @@ namespace tekenprogramma
         {
             this.shape.Reselect(this.invoker, this.e, this.paintSurface);
         }
+        //public void Undo()
+        //{
+
+        //}
+
+        //public void Redo()
+        //{
+
+        //}
     }
 
 
@@ -330,6 +376,15 @@ namespace tekenprogramma
         {
             this.mycommand.ReGroup(this.selectedCanvas, this.invoker);
         }
+        //public void Undo()
+        //{
+
+        //}
+
+        //public void Redo()
+        //{
+
+        //}
     }
 
     //class resize group
@@ -353,11 +408,14 @@ namespace tekenprogramma
         public void Execute()
         {
             //this.mycommand.Resize(this.invoker, this.e, this.paintSurface, this.element);
-
-            ResizeClient resizer = new ResizeClient();
             IVisitor visitor = new ConcreteVisitorResize();
             Group selectedgroup = this.invoker.selectedGroups.Last();
-            resizer.Client(selectedgroup.drawnComponents, selectedgroup.drawnElements, selectedgroup, visitor, this.invoker, this.e, this.paintSurface, this.element);
+            this.mycommand.ResizeClient(selectedgroup, visitor, this.invoker, this.e, this.paintSurface, this.element);
+
+            //ResizeClient resizer = new ResizeClient();
+            //IVisitor visitor = new ConcreteVisitorResize();
+            //Group selectedgroup = this.invoker.selectedGroups.Last();
+            //resizer.Client(selectedgroup.drawnComponents, selectedgroup.drawnElements, selectedgroup, visitor, this.invoker, this.e, this.paintSurface, this.element);
         }
 
         public void Undo()
@@ -369,6 +427,15 @@ namespace tekenprogramma
         {
             this.mycommand.Redo(this.invoker, this.paintSurface);
         }
+        //public void Undo()
+        //{
+
+        //}
+
+        //public void Redo()
+        //{
+
+        //}
     }
 
     //class move group
@@ -391,11 +458,15 @@ namespace tekenprogramma
 
         public void Execute()
         {
-            //this.mycommand.Moving(this.invoker, this.e, this.paintSurface, this.element);
-            MoveClient mover = new MoveClient();
-            IVisitor visitor = new ConcreteVisitorMove();
+            IVisitor visitor = new ConcreteVisitorResize();
             Group selectedgroup = this.invoker.selectedGroups.Last();
-            mover.Client(selectedgroup.drawnComponents, selectedgroup.drawnElements, selectedgroup, visitor, this.invoker, this.e, this.paintSurface, this.element);
+            this.mycommand.MoveClient(selectedgroup, visitor, this.invoker, this.e, this.paintSurface, this.element);
+
+            //this.mycommand.Moving(this.invoker, this.e, this.paintSurface, this.element);
+            //MoveClient mover = new MoveClient();
+            //IVisitor visitor = new ConcreteVisitorMove();
+            //Group selectedgroup = this.invoker.selectedGroups.Last();
+            //mover.Client(selectedgroup.drawnComponents, selectedgroup.drawnElements, selectedgroup, visitor, this.invoker, this.e, this.paintSurface, this.element);
         }
 
         public void Undo()
@@ -407,6 +478,15 @@ namespace tekenprogramma
         {
             this.mycommand.Redo(this.invoker, this.paintSurface);
         }
+        //public void Undo()
+        //{
+
+        //}
+
+        //public void Redo()
+        //{
+
+        //}
     }
 
 
@@ -447,6 +527,15 @@ namespace tekenprogramma
         {
             this.mycommand.Redraw(this.invoker, this.paintSurface);
         }
+        //public void Undo()
+        //{
+
+        //}
+
+        //public void Redo()
+        //{
+
+        //}
     }
 
 
