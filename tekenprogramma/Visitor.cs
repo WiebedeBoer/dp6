@@ -62,6 +62,8 @@ namespace tekenprogramma
             invoker.unselectedGroups.Add(selectedgroup);
             invoker.selectedGroups.RemoveAt(invoker.selectedGroups.Count() - 1);
 
+            invoker.unmovedGroups.Add(selectedgroup);
+
             selectedgroup.Repaint(invoker, paintSurface); //repaint
         }
     }
@@ -112,6 +114,8 @@ namespace tekenprogramma
             invoker.unselectedGroups.Add(selectedgroup);
             invoker.selectedGroups.RemoveAt(invoker.selectedGroups.Count() - 1);
 
+            invoker.unmovedGroups.Add(selectedgroup);
+
             selectedgroup.Repaint(invoker, paintSurface);//repaint
         }
     }
@@ -146,7 +150,10 @@ namespace tekenprogramma
             newRectangle.Name = "Rectangle"; //attach name
             Canvas.SetLeft(newRectangle, location.x);//set left position
             Canvas.SetTop(newRectangle, location.y); //set top position          
-            invoker.drawnElements.Add(newRectangle);
+            //add new to drawn
+            invoker.drawnElements.Add(newRectangle); //1+
+            //add undo
+            invoker.unmovedElements.Add(newRectangle); //3b+
             returnelement = newRectangle;
             return returnelement;
         }
@@ -166,7 +173,10 @@ namespace tekenprogramma
             newEllipse.Name = "Ellipse";//attach name
             Canvas.SetLeft(newEllipse, location.x);//set left position
             Canvas.SetTop(newEllipse, location.y);//set top position
-            invoker.drawnElements.Add(newEllipse);
+            //add new to drawn
+            invoker.drawnElements.Add(newEllipse); //1+
+            //add undo
+            invoker.unmovedElements.Add(newEllipse); //3b+
             returnelement = newEllipse;
             return returnelement;
         }
@@ -186,8 +196,8 @@ namespace tekenprogramma
                 inc++;
             }
             invoker.drawnElements.RemoveAt(number);
-            invoker.unmovedElements.Add(element);
-            invoker.movedElements.Add(element);
+        //    invoker.unmovedElements.Add(element);
+        //    invoker.movedElements.Add(element);
             //string key = element.AccessKey;
             //int inc = 0;
             //int number = 0;
@@ -224,7 +234,10 @@ namespace tekenprogramma
             newRectangle.Name = "Rectangle"; //attach name
             Canvas.SetLeft(newRectangle, location.x);
             Canvas.SetTop(newRectangle, location.y);
-            invoker.drawnElements.Add(newRectangle);
+            //add new to drawn
+            invoker.drawnElements.Add(newRectangle); //1+
+            //add undo
+            invoker.unmovedElements.Add(newRectangle); //3b+
             returnelement = newRectangle;
             return returnelement;
         }
@@ -244,7 +257,10 @@ namespace tekenprogramma
             newEllipse.Name = "Ellipse";//attach name
             Canvas.SetLeft(newEllipse, location.x);//set left position
             Canvas.SetTop(newEllipse, location.y);//set top position
-            invoker.drawnElements.Add(newEllipse);
+            //add new to drawn
+            invoker.drawnElements.Add(newEllipse); //1+
+            //add undo
+            invoker.unmovedElements.Add(newEllipse); //3b+
             returnelement = newEllipse;
             return returnelement;
         }
@@ -264,8 +280,8 @@ namespace tekenprogramma
                 inc++;
             }
             invoker.drawnElements.RemoveAt(number);
-            invoker.unmovedElements.Add(element);
-            invoker.movedElements.Add(element);
+        //    invoker.unmovedElements.Add(element);
+        //    invoker.movedElements.Add(element);
             //string key = element.AccessKey;
             //int inc = 0;
             //int number = 0;
