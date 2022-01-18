@@ -87,7 +87,7 @@ namespace tekenprogramma
         public List<TextBlock> ornaments = new List<TextBlock>();
         public List<TextBlock> removedOrnaments = new List<TextBlock>();
         public List<string> ornamentNames = new List<string>();
-        public List<string> remvedOrnamentNames = new List<string>();
+        public List<string> removedOrnamentNames = new List<string>();
         public List<string> ornamentPositions = new List<string>();
         public List<string> removedOrnamentPositions = new List<string>();
 

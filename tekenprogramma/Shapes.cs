@@ -54,9 +54,11 @@ namespace tekenprogramma
         public List<TextBlock> ornaments = new List<TextBlock>();
         public List<TextBlock> removedOrnaments = new List<TextBlock>();
         public List<string> ornamentNames = new List<string>();
-        public List<string> remvedOrnamentNames = new List<string>();
+        public List<string> removedOrnamentNames = new List<string>();
+        public List<string> removedOrnamentKeys = new List<string>();
         public List<string> ornamentPositions = new List<string>();
         public List<string> removedOrnamentPositions = new List<string>();
+        public List<string> OrnamentKeys = new List<string>();
 
         //file IO
         public string fileText { get; set; }
@@ -527,6 +529,9 @@ namespace tekenprogramma
             invoker.drawnComponents.Clear();
             invoker.removedComponents.Clear();
             invoker.movedComponents.Clear();
+            //ornaments
+            invoker.drawnOrnaments.Clear();
+            invoker.removedOrnaments.Clear();
             //invoker.selectComponentsList.Clear();
             //invoker.unselectComponentsList.Clear();
             invoker.executer = 0;

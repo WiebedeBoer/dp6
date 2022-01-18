@@ -125,6 +125,7 @@ namespace tekenprogramma
         {
             TextBlock lab = new TextBlock();
             lab.Text = ornament;
+            lab.Name = invoker.executer.ToString();
             if (ornament.Length >=5)
             {
                 string gs = lab.Text.Substring(0, 5);
@@ -214,7 +215,7 @@ namespace tekenprogramma
                     //add to canvas
                     lab.AccessKey = Convert.ToString(element.AccessKey);
                     Canvas parent = (Canvas)element.Parent;
-                    parent.Children.Add(lab);
+                    parent.Children.Add(lab); //err
                 }
                 //add to drawn
                 if (firstdraw ==false)
@@ -226,6 +227,7 @@ namespace tekenprogramma
 
         }
 
+        //remove ornament
         public void Undraw(Invoker invoker, Canvas paintSurface)
         {
             TextBlock lastlab = invoker.drawnOrnaments.Last();
@@ -234,6 +236,7 @@ namespace tekenprogramma
             Repaint(invoker, paintSurface); //repaint
         }
 
+        //re add ornament
         public void Redraw(Invoker invoker, Canvas paintSurface)
         {
             TextBlock lastlab = invoker.removedOrnaments.Last();
@@ -254,20 +257,20 @@ namespace tekenprogramma
             {
                 paintSurface.Children.Add(drawelement); //add
             }
-            //foreach (FrameworkElement drawornament in invoker.drawnOrnaments)
-            //{
-            //    paintSurface.Children.Add(drawornament); //add
-            //}
-            foreach (Shape shape in invoker.drawnShapes)
+            foreach (FrameworkElement drawornament in invoker.drawnOrnaments)
             {
-                int i = 0;
-                foreach (string ornament in shape.ornamentNames)
-                {
-                    OrnamentDecorator deco = new OrnamentDecorator(shape);
-                    deco.Draw(shape.madeelement, ornament, shape.ornamentPositions[i], invoker, false);
-                    i++;
-                }
+                paintSurface.Children.Add(drawornament); //add
             }
+            //foreach (Shape shape in invoker.drawnShapes)
+            //{
+            //    int i = 0;
+            //    foreach (string ornament in shape.ornamentNames)
+            //    {
+            //        OrnamentDecorator deco = new OrnamentDecorator(shape);
+            //        deco.Draw(shape.madeelement, ornament, shape.ornamentPositions[i], invoker, false);
+            //        i++;
+            //    }
+            //}
         }
 
     }
