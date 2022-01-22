@@ -256,6 +256,7 @@ namespace tekenprogramma
         public void RemoveOrnament(TextBlock element, Invoker invoker)
         {
             string key = element.Name;
+            string akey = element.AccessKey;
             //int inc = 0;
             //int number = 0;
             Shape selectedShape = null;
@@ -297,6 +298,7 @@ namespace tekenprogramma
         public void AddOrnament(TextBlock element, Invoker invoker)
         {
             string key = element.Name;
+            string akey = element.AccessKey;
             //int inc = 0;
             //int number = 0;
             Shape selectedShape =null;
