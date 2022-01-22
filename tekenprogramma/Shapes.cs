@@ -56,9 +56,13 @@ namespace tekenprogramma
         public List<string> ornamentNames = new List<string>();
         public List<string> removedOrnamentNames = new List<string>();
         public List<string> removedOrnamentKeys = new List<string>();
+        public List<string> undoOrnamentNames = new List<string>();
         public List<string> ornamentPositions = new List<string>();
         public List<string> removedOrnamentPositions = new List<string>();
         public List<string> OrnamentKeys = new List<string>();
+        //for undo redo ornaments
+        public List<string> ornamentKeyNames = new List<string>();
+        public List<string> undoKeyNames = new List<string>();
 
         //file IO
         public string fileText { get; set; }

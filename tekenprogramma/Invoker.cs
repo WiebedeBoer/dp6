@@ -56,6 +56,8 @@ namespace tekenprogramma
 
         public List<TextBlock> drawnOrnaments = new List<TextBlock>();
         public List<TextBlock> removedOrnaments = new List<TextBlock>();
+        public List<TextBlock> undoOrnaments = new List<TextBlock>();
+        public List<TextBlock> redoOrnaments = new List<TextBlock>();
 
         public Invoker()
         {

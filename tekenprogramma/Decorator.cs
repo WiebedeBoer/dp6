@@ -104,7 +104,7 @@ namespace tekenprogramma
                         {
                             //num = inc;
                             //component.Add(shape, position, ornament);
-                            Add(shape, position, ornament);
+                            Add(shape, position, ornament, invoker);
                         }
                         //inc++;
                     }
@@ -114,11 +114,12 @@ namespace tekenprogramma
             }
         }
 
-        public void Add(IDecoratorShape decoshape, string position, string ornament)
+        public void Add(IDecoratorShape decoshape, string position, string ornament, Invoker invoker)
         {
             Shape shape = decoshape.Execute();
             shape.ornamentPositions.Add(position);
             shape.ornamentNames.Add(ornament);
+            shape.ornamentKeyNames.Add(invoker.executer.ToString());
         }
 
         public void Draw(FrameworkElement element, string ornament, string position, Invoker invoker, bool firstdraw)
@@ -231,46 +232,154 @@ namespace tekenprogramma
         public void Undraw(Invoker invoker, Canvas paintSurface)
         {
             TextBlock lastlab = invoker.drawnOrnaments.Last();
-            invoker.removedOrnaments.Add(lastlab);
+            //invoker.removedOrnaments.Add(lastlab);
+            invoker.undoOrnaments.Add(lastlab);
             invoker.drawnOrnaments.RemoveAt(invoker.drawnOrnaments.Count() -1);
-            Repaint(invoker, paintSurface); //repaint
+            RemoveOrnament(lastlab, invoker);
+            Repaint(invoker, paintSurface, true); //repaint
         }
 
         //re add ornament
         public void Redraw(Invoker invoker, Canvas paintSurface)
         {
-            TextBlock lastlab = invoker.removedOrnaments.Last();
+            //TextBlock lastlab = invoker.removedOrnaments.Last();
+            TextBlock lastlab = invoker.undoOrnaments.Last();
+            invoker.redoOrnaments.Add(lastlab);
             invoker.drawnOrnaments.Add(lastlab);
-            invoker.removedOrnaments.RemoveAt(invoker.removedOrnaments.Count() - 1);
-            Repaint(invoker, paintSurface); //repaint
+            //invoker.removedOrnaments.RemoveAt(invoker.removedOrnaments.Count() - 1);
+            invoker.undoOrnaments.RemoveAt(invoker.undoOrnaments.Count() - 1);
+            AddOrnament(lastlab, invoker);
+            Repaint(invoker, paintSurface, false); //repaint
         }
 
+        //remove selected ornament by name key
+        public void RemoveOrnament(TextBlock element, Invoker invoker)
+        {
+            string key = element.Name;
+            //int inc = 0;
+            //int number = 0;
+            Shape selectedShape = null;
+            foreach (Shape drawnShape in invoker.drawnShapes)
+            {
+
+                foreach (String drawnName in drawnShape.ornamentKeyNames)
+                if (drawnName == key)
+                {
+                    //number = inc;
+                    selectedShape = drawnShape;
+                }
+                //inc++;
+            }
+            //invoker.drawnElements.RemoveAt(number);
+            //invoker.removedElements.Add(element);
+            //invoker.movedElements.Add(element);
+            if (selectedShape !=null)
+            {
+                RemoveFromShape(selectedShape, invoker);
+            }
+            
+        }
+
+        //remove names for repaint
+        public void RemoveFromShape(Shape selectedShape, Invoker invoker)
+        {
+            //for repaint
+            String lastornname = selectedShape.ornamentNames.Last();
+            selectedShape.ornamentNames.RemoveAt(selectedShape.ornamentNames.Count() - 1);
+            selectedShape.undoOrnamentNames.Add(lastornname);
+            //for redo
+            String lastname = selectedShape.ornamentKeyNames.Last();
+            selectedShape.ornamentKeyNames.RemoveAt(selectedShape.ornamentKeyNames.Count() - 1);
+            selectedShape.undoKeyNames.Add(lastname);
+        }
+
+        //add selected ornament by name key
+        public void AddOrnament(TextBlock element, Invoker invoker)
+        {
+            string key = element.Name;
+            //int inc = 0;
+            //int number = 0;
+            Shape selectedShape =null;
+            foreach (Shape drawnShape in invoker.drawnShapes)
+            {
+
+                foreach (String drawnName in drawnShape.undoKeyNames)
+                    if (drawnName == key)
+                    {
+                        //number = inc;
+                        selectedShape = drawnShape;
+                    }
+                //inc++;
+            }
+            //invoker.drawnElements.RemoveAt(number);
+            //invoker.removedElements.Add(element);
+            //invoker.movedElements.Add(element);
+            if (selectedShape != null)
+            {
+                AddToShape(selectedShape, invoker);
+            }
+                
+        }
+
+        //re add names for repaint
+        public void AddToShape(Shape selectedShape, Invoker invoker)
+        {
+            //for repaint
+            String lastornname = selectedShape.undoOrnamentNames.Last();
+            selectedShape.undoOrnamentNames.RemoveAt(selectedShape.ornamentNames.Count() - 1);
+            selectedShape.ornamentNames.Add(lastornname);
+            //for undo
+            String lastname = selectedShape.undoKeyNames.Last();
+            selectedShape.undoKeyNames.RemoveAt(selectedShape.undoKeyNames.Count() - 1);
+            selectedShape.ornamentKeyNames.Add(lastname);
+        }
         //
         //repaint
         //
 
         //repaint
-        public void Repaint(Invoker invoker, Canvas paintSurface)
+        public void Repaint(Invoker invoker, Canvas paintSurface, Boolean undone)
         {
             paintSurface.Children.Clear();
             foreach (FrameworkElement drawelement in invoker.drawnElements)
             {
                 paintSurface.Children.Add(drawelement); //add
             }
-            foreach (FrameworkElement drawornament in invoker.drawnOrnaments)
+
+            if (undone ==true)
             {
-                paintSurface.Children.Add(drawornament); //add
+                //foreach (FrameworkElement drawornament in invoker.drawnOrnaments)
+                //{
+                //    paintSurface.Children.Add(drawornament); //add
+                //}
+                foreach (Shape shape in invoker.drawnShapes)
+                {
+                    int i = 0;
+                    foreach (string ornament in shape.ornamentNames)
+                    {
+                        OrnamentDecorator deco = new OrnamentDecorator(shape);
+                        deco.Draw(shape.madeelement, ornament, shape.ornamentPositions[i], invoker, false);
+                        i++;
+                    }
+                }
             }
-            //foreach (Shape shape in invoker.drawnShapes)
-            //{
-            //    int i = 0;
-            //    foreach (string ornament in shape.ornamentNames)
-            //    {
-            //        OrnamentDecorator deco = new OrnamentDecorator(shape);
-            //        deco.Draw(shape.madeelement, ornament, shape.ornamentPositions[i], invoker, false);
-            //        i++;
-            //    }
-            //}
+            else
+            {
+                foreach (Shape shape in invoker.drawnShapes)
+                {
+                    int i = 0;
+                    foreach (string ornament in shape.ornamentNames)
+                    {
+                        OrnamentDecorator deco = new OrnamentDecorator(shape);
+                        deco.Draw(shape.madeelement, ornament, shape.ornamentPositions[i], invoker, false);
+                        i++;
+                    }
+                }
+            }
+
+
+
+
         }
 
     }
