@@ -235,6 +235,7 @@ namespace tekenprogramma
             Shape selectedShape = null;
             TextBlock element = null;
             int ornamentnum = -1;
+            //shapes
             for (int inc = num; inc >=0; inc--)
             {
                 element = invoker.drawnOrnaments[inc];
@@ -248,10 +249,48 @@ namespace tekenprogramma
                         {
                             selectedShape = drawnShape;
                             ornamentnum = inc;
+                            
+
+                            //string gs = element.Text.Substring(0, 5);
+                            ////if ornament of goup.
+                            //if (gs == "groep" || gs == "group" || gs == "Groep" || gs == "Group")
+                            //{
+                            //    invoker.undoGroupOrnaments.Add(element);
+                            //}
                             inc = -1;
                         }
                     }
                 }
+            }
+
+            if (selectedShape != null)
+            {
+                RemoveFromShape(selectedShape, invoker);
+            }
+
+            Group selectedGroup = null;
+            for (int ing = num; ing >= 0; ing--)
+            {
+                element = invoker.drawnOrnaments[ing];
+                string nkey = element.Name;
+                string akey = element.AccessKey;
+                foreach (Group drawnGroup in invoker.drawnGroups)
+                {
+                    foreach (String drawnName in drawnGroup.ornamentKeyNames)
+                    {
+                        if (drawnName == nkey)
+                        {
+                            selectedGroup = drawnGroup;
+                            ornamentnum = ing;
+                            ing = -1;
+                        }
+                    }
+                }
+            }
+
+            if (selectedGroup != null)
+            {
+                RemoveFromGroup(selectedGroup, invoker);
             }
 
             if (ornamentnum >=0)
@@ -260,10 +299,7 @@ namespace tekenprogramma
                 invoker.drawnOrnaments.RemoveAt(ornamentnum);
             }
 
-            if (selectedShape != null)
-            {
-                RemoveFromShape(selectedShape, invoker);
-            }
+
 
             Repaint(invoker, paintSurface); //repaint
         }
@@ -293,14 +329,41 @@ namespace tekenprogramma
                     }
                 }
             }
+
+            if (selectedShape != null)
+            {
+                AddToShape(selectedShape, invoker);
+            }
+
+            Group selectedGroup = null;
+            for (int ing = num; ing >= 0; ing--)
+            {
+                element = invoker.undoOrnaments[ing];
+                string nkey = element.Name;
+                string akey = element.AccessKey;
+                foreach (Group drawnGroup in invoker.drawnGroups)
+                {
+                    foreach (String drawnName in drawnGroup.undoKeyNames)
+                    {
+                        if (drawnName == nkey)
+                        {
+                            selectedGroup = drawnGroup;
+                            ornamentnum = ing;
+                            ing = -1;
+                        }
+                    }
+                }
+            }
+
+            if (selectedGroup != null)
+            {
+                RemoveFromGroup(selectedGroup, invoker);
+            }
+
             if (ornamentnum >= 0)
             {
                 invoker.drawnOrnaments.Add(element);
                 invoker.undoOrnaments.RemoveAt(ornamentnum);
-            }
-            if (selectedShape != null)
-            {
-                AddToShape(selectedShape, invoker);
             }
             Repaint(invoker, paintSurface); //repaint
         }
@@ -320,7 +383,17 @@ namespace tekenprogramma
             selectedShape.undoKeyNames.Add(lastname);
         }
 
-
+        public void RemoveFromGroup(Group selectedGroup, Invoker invoker)
+        {
+            //for repaint
+            String lastornname = selectedGroup.ornamentNames.Last();
+            selectedGroup.ornamentNames.RemoveAt(selectedGroup.ornamentNames.Count() - 1);
+            selectedGroup.undoOrnamentNames.Add(lastornname);
+            //for redo
+            String lastname = selectedGroup.ornamentKeyNames.Last();
+            selectedGroup.ornamentKeyNames.RemoveAt(selectedGroup.ornamentKeyNames.Count() - 1);
+            selectedGroup.undoKeyNames.Add(lastname);
+        }
 
         //re add names for repaint
         public void AddToShape(Shape selectedShape, Invoker invoker)
@@ -334,6 +407,20 @@ namespace tekenprogramma
             selectedShape.undoKeyNames.RemoveAt(selectedShape.undoKeyNames.Count() - 1);
             selectedShape.ornamentKeyNames.Add(lastname);
         }
+
+        //re add names for repaint
+        public void AddToGroup(Shape selectedGroup, Invoker invoker)
+        {
+            //for repaint
+            String lastornname = selectedGroup.undoOrnamentNames.Last();
+            selectedGroup.undoOrnamentNames.RemoveAt(selectedGroup.undoOrnamentNames.Count() - 1);
+            selectedGroup.ornamentNames.Add(lastornname);
+            //for undo
+            String lastname = selectedGroup.undoKeyNames.Last();
+            selectedGroup.undoKeyNames.RemoveAt(selectedGroup.undoKeyNames.Count() - 1);
+            selectedGroup.ornamentKeyNames.Add(lastname);
+        }
+
         //
         //repaint
         //
@@ -361,6 +448,22 @@ namespace tekenprogramma
                         i++;
                     }
                 }
+
+            foreach (Group group in invoker.drawnGroups)
+            {
+                int i = 0;
+                foreach (string ornament in group.ornamentNames)
+                {
+                    if (group.drawnShapes.Count() > 0)
+                    {
+                        OrnamentDecorator deco = new OrnamentDecorator(group);
+                        Shape groupshape = group.drawnShapes.First();
+                        deco.Draw(groupshape.madeelement, ornament, group.ornamentPositions[i], invoker, false);
+                    }
+
+                    i++;
+                }
+            }
 
         }
 

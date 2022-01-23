@@ -14,9 +14,10 @@ namespace tekenprogramma
     //class invoker
     public class Invoker
     {
+        //actions
         public List<ICommand> actionsList = new List<ICommand>();
         public List<ICommand> redoList = new List<ICommand>();
-
+        //elements
         //state 0
         public List<FrameworkElement> removedElements = new List<FrameworkElement>(); //0
         //state 1
@@ -56,14 +57,16 @@ namespace tekenprogramma
         public List<IComponent> drawnComponents = new List<IComponent>();
         public List<IComponent> removedComponents = new List<IComponent>();
         public List<IComponent> movedComponents = new List<IComponent>();
-
+        //counter
         public int counter = 0;
         public int executer = 0;
-
+        //ornaments
         public List<TextBlock> drawnOrnaments = new List<TextBlock>();
         public List<TextBlock> removedOrnaments = new List<TextBlock>();
         public List<TextBlock> undoOrnaments = new List<TextBlock>();
         public List<TextBlock> redoOrnaments = new List<TextBlock>();
+
+        public List<TextBlock> undoGroupOrnaments = new List<TextBlock>();
 
         public Invoker()
         {
