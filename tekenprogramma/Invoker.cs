@@ -31,10 +31,15 @@ namespace tekenprogramma
         public List<FrameworkElement> undoElements = new List<FrameworkElement>(); //4a
         public List<FrameworkElement> redoElements = new List<FrameworkElement>(); //4b
 
+        //shapes
         public List<Shape> drawnShapes = new List<Shape>();
         public List<Shape> removedShapes = new List<Shape>();
         public List<Shape> movedShapes = new List<Shape>();
 
+        public List<Shape> selectedShapes = new List<Shape>(); //2a
+        public List<Shape> unselectedShapes = new List<Shape>(); //2b
+
+        //groups
         public List<Group> removedGroups = new List<Group>(); //0
         public List<Group> drawnGroups = new List<Group>(); //1       
 
@@ -47,6 +52,7 @@ namespace tekenprogramma
         public List<Group> undoGroups = new List<Group>(); //4a
         public List<Group> redoGroups = new List<Group>(); //4b
 
+        //components
         public List<IComponent> drawnComponents = new List<IComponent>();
         public List<IComponent> removedComponents = new List<IComponent>();
         public List<IComponent> movedComponents = new List<IComponent>();
