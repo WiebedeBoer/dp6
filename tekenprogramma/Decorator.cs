@@ -166,12 +166,12 @@ namespace tekenprogramma
                     //set position
                     if (position == "top" || position == "Top")
                     {
-                        Canvas.SetLeft(lab, groupright - groupleft);
+                        Canvas.SetLeft(lab, (((groupright - groupleft) / 2) + groupleft));
                         Canvas.SetTop(lab, grouptop - 25);
                     }
                     else if (position == "bottom" || position == "Bottom")
                     {
-                        Canvas.SetLeft(lab, groupright - groupleft);
+                        Canvas.SetLeft(lab, (((groupright - groupleft) / 2) + groupleft));
                         Canvas.SetTop(lab, grouptop + groupheight + 25);
                     }
                     else if (position == "left" || position == "Left")
