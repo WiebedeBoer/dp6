@@ -348,13 +348,18 @@ namespace tekenprogramma
                     submover.Client(subgroup.drawnComponents, subgroup.drawnElements, subgroup, subvisitor, invoker, e, paintSurface, selectedelement);
                 }
             }
-            //add to moved or resized
-            invoker.movedGroups.Add(selectedgroup);
-            //remove selected group
-            invoker.unselectedGroups.Add(selectedgroup);
-            invoker.selectedGroups.RemoveAt(invoker.selectedGroups.Count() - 1);
 
-            selectedgroup.Repaint(invoker, paintSurface); //repaint
+            if (invoker.selectedGroups.Count() >0)
+            {
+                //add to moved or resized
+                invoker.movedGroups.Add(selectedgroup);
+                //remove selected group
+                invoker.unselectedGroups.Add(selectedgroup);
+                invoker.selectedGroups.RemoveAt(invoker.selectedGroups.Count() - 1);
+
+                selectedgroup.Repaint(invoker, paintSurface); //repaint
+            }
+
         }
 
 
@@ -786,14 +791,30 @@ namespace tekenprogramma
             {
                 foreach (Group subgroup in group.addedGroups)
                 {
-                    subgroup.SelectInGroupHandle(invoker, key, group);
-                    foreach (FrameworkElement drawn in subgroup.drawnElements)
+                    //if (subgroup.addedGroups.Count() > 0)
+                    //{
+                    //foreach (Group subsubgroup in subgroup.addedGroups)
+                    //{
+                    if (subgroup.drawnElements.Count() > 0)
                     {
-                        if (drawn.AccessKey == key)
+                        foreach (FrameworkElement drawn in subgroup.drawnElements)
                         {
-                            invoker.selectedGroups.Add(group);
+                            if (drawn.AccessKey == key)
+                            {
+                                invoker.selectedGroups.Add(group);
+                            }
                         }
                     }
+
+                    //}
+
+
+                    //}
+                    if (subgroup.addedGroups.Count() > 0)
+                    {
+                        subgroup.SelectInGroupHandle(invoker, key, group);
+                    }
+                        
                 }
             }
         }

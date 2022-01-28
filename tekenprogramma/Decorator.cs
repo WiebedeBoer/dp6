@@ -133,7 +133,7 @@ namespace tekenprogramma
                 //if ornament add to goup.
                 if (gs == "groep" || gs == "group" || gs == "Groep" || gs == "Group")
                 {
-                    Group lastgroup = invoker.selectedGroups.Last();
+                    Group lastgroup = invoker.selectedGroups.Last(); //err
                     //group size variables.
                     double groupleft = 1000;
                     double grouptop = 1000;

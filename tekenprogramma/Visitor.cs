@@ -56,15 +56,20 @@ namespace tekenprogramma
                     submover.Client(subgroup.drawnComponents, subgroup.drawnElements, subgroup, subvisitor, invoker, e, paintSurface, selectedelement);
                 }
             }
+
+                invoker.movedGroups.Add(selectedgroup);
+                //remove selected group
+                invoker.unselectedGroups.Add(selectedgroup);
             //add to moved or resized
-            invoker.movedGroups.Add(selectedgroup);
-            //remove selected group
-            invoker.unselectedGroups.Add(selectedgroup);
-            invoker.selectedGroups.RemoveAt(invoker.selectedGroups.Count() - 1);
+            if (invoker.selectedGroups.Count() > 0)
+            {
+                invoker.selectedGroups.RemoveAt(invoker.selectedGroups.Count() - 1); //err index
+            }
+                invoker.unmovedGroups.Add(selectedgroup);
 
-            invoker.unmovedGroups.Add(selectedgroup);
+                selectedgroup.Repaint(invoker, paintSurface); //repaint
+            
 
-            selectedgroup.Repaint(invoker, paintSurface); //repaint
         }
     }
 
@@ -109,14 +114,19 @@ namespace tekenprogramma
                 }
             }
             //add to moved or resized
-            invoker.movedGroups.Add(selectedgroup);
-            //remove selected group
-            invoker.unselectedGroups.Add(selectedgroup);
-            invoker.selectedGroups.RemoveAt(invoker.selectedGroups.Count() - 1);
+            if (invoker.selectedGroups.Count() > 0)
+            {
+                //add to moved or resized
+                invoker.movedGroups.Add(selectedgroup);
+                //remove selected group
+                invoker.unselectedGroups.Add(selectedgroup);
+                invoker.selectedGroups.RemoveAt(invoker.selectedGroups.Count() - 1);
 
-            invoker.unmovedGroups.Add(selectedgroup);
+                invoker.unmovedGroups.Add(selectedgroup);
 
-            selectedgroup.Repaint(invoker, paintSurface);//repaint
+                selectedgroup.Repaint(invoker, paintSurface);//repaint
+            }
+
         }
     }
 
