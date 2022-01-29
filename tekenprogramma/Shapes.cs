@@ -103,7 +103,7 @@ namespace tekenprogramma
         // Deselects the shape
         public void Deselect(Invoker invoker, PointerRoutedEventArgs e, Canvas paintSurface)
         {
-            selectedElement = invoker.selectElements.Last();
+            selectedElement = invoker.selectElements.Last(); //err
             selectedElement.Opacity = 1; //fill opacity
             invoker.selectElements.RemoveAt(invoker.selectElements.Count() - 1);
             invoker.unselectElements.Add(selectedElement);
