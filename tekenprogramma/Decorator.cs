@@ -114,6 +114,7 @@ namespace tekenprogramma
             }
         }
 
+        //add ornaments
         public void Add(IDecoratorShape decoshape, string position, string ornament, Invoker invoker)
         {
             Shape shape = decoshape.Execute();
@@ -122,8 +123,23 @@ namespace tekenprogramma
             shape.ornamentKeyNames.Add(invoker.executer.ToString());
         }
 
+        //prepare undo ornament
+        public void PrepareOrnamentUndo(Invoker invoker)
+        {
+            List<TextBlock> PrepareUndo = new List<TextBlock>();
+            foreach (TextBlock drawornament in invoker.drawnOrnaments)
+            {
+                PrepareUndo.Add(drawornament); //add
+            }
+            invoker.undoOrnamentsList.Add(PrepareUndo);
+        }
+
+        //draw ornaments
         public void Draw(FrameworkElement element, string ornament, string position, Invoker invoker, bool firstdraw)
         {
+            //prepare undo
+            PrepareOrnamentUndo(invoker);
+            //draw
             TextBlock lab = new TextBlock();
             lab.Text = ornament;
             lab.Name = invoker.executer.ToString();
@@ -231,6 +247,22 @@ namespace tekenprogramma
         //remove ornament
         public void Undraw(Invoker invoker, Canvas paintSurface)
         {
+            List<TextBlock> lastUndo = invoker.undoOrnamentsList.Last();
+            invoker.redoOrnamentsList.Add(lastUndo);
+            invoker.undoOrnamentsList.RemoveAt(invoker.undoOrnamentsList.Count() - 1);
+            //repaint
+            paintSurface.Children.Clear();
+            foreach (TextBlock drawornament in lastUndo)
+            {
+                paintSurface.Children.Add(drawornament); //add
+            }
+            foreach (FrameworkElement drawelement in invoker.drawnElements)
+            {
+                paintSurface.Children.Add(drawelement); //add
+            }
+
+            /*
+            
             int num = invoker.drawnOrnaments.Count() - 1;
             Shape selectedShape = null;
             TextBlock element = null;
@@ -261,7 +293,9 @@ namespace tekenprogramma
                         }
                     }
                 }
-            }
+
+                
+        }
 
             if (selectedShape != null)
             {
@@ -302,11 +336,28 @@ namespace tekenprogramma
 
 
             Repaint(invoker, paintSurface); //repaint
+
+            */
         }
 
         //re add ornament
         public void Redraw(Invoker invoker, Canvas paintSurface)
         {
+            List<TextBlock> lastRedo = invoker.redoOrnamentsList.Last();
+            invoker.undoOrnamentsList.Add(lastRedo);
+            invoker.redoOrnamentsList.RemoveAt(invoker.redoOrnamentsList.Count() - 1);
+            //repaint
+            paintSurface.Children.Clear();
+            foreach (TextBlock drawornament in lastRedo)
+            {
+                paintSurface.Children.Add(drawornament); //add
+            }
+            foreach (FrameworkElement drawelement in invoker.drawnElements)
+            {
+                paintSurface.Children.Add(drawelement); //add
+            }
+            /*
+            
             int num = invoker.undoOrnaments.Count() - 1;
             Shape selectedShape = null;
             TextBlock element = null;
@@ -366,6 +417,8 @@ namespace tekenprogramma
                 invoker.undoOrnaments.RemoveAt(ornamentnum);
             }
             Repaint(invoker, paintSurface); //repaint
+
+            */
         }
 
 

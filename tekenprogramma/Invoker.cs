@@ -68,6 +68,13 @@ namespace tekenprogramma
 
         public List<TextBlock> undoGroupOrnaments = new List<TextBlock>();
 
+        //undo redo elements
+        public List<List<FrameworkElement>> undoElementsList = new List<List<FrameworkElement>>(); 
+        public List<List<FrameworkElement>> redoElementsList = new List<List<FrameworkElement>>();
+        //undo redo ornaments
+        public List<List<TextBlock>> undoOrnamentsList = new List<List<TextBlock>>(); 
+        public List<List<TextBlock>> redoOrnamentsList = new List<List<TextBlock>>(); 
+
         public Invoker()
         {
             this.actionsList = new List<ICommand>();
